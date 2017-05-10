@@ -397,6 +397,8 @@ DATE SUBMITTED: \@degreemonth~\@degreeyear
 		Committee Member    \vspace{0.75in}          & & Signature \\
 		\underline{\makebox[2.1in][l]{\@othermemberB}} & &  \underline{\makebox[2.1in][l]{}} \\
 		Committee Member    \vspace{0.75in}          & & Signature \\
+		\underline{\makebox[2.1in][l]{\@othermemberC}} & &  \underline{\makebox[2.1in][l]{}} \\
+		Committee Member    \vspace{0.75in}          & & Signature \\
 
 \end{tabular}
 
@@ -427,6 +429,7 @@ DATE SUBMITTED: &\@degreemonth~\@degreeyear  \par\\
 COMMITTEE CHAIR:  &\begin{minipage}[t]{\columnwidth}\begin{flushleft}\@chair\end{flushleft}\end{minipage}  \par\\\\
 COMMITTEE MEMBER: &\begin{minipage}[t]{\columnwidth}\begin{flushleft}\@othermemberA\end{flushleft}\end{minipage}     \par\\\\
 COMMITTEE MEMBER: &\begin{minipage}[t]{\columnwidth}\begin{flushleft}\@othermemberB\end{flushleft}\end{minipage}     \par\\\\
+COMMITTEE MEMBER: &\begin{minipage}[t]{\columnwidth}\begin{flushleft}\@othermemberC\end{flushleft}\end{minipage}     \par\\\\
 \end{tabular}
 
 \end{alwayssingle}
@@ -470,7 +473,17 @@ ALL RIGHTS RESERVED
 {\abstractname}\par
 \@title\par
 \vspace{.1in}
-\@author\par
+% \@author\par
+\author[smx,cp]{Skylar Eglowski} \par
+\author[cp]{Alex Dekhtyar}
+\author[smx]{Vadim Kagan}
+\author[smx]{Andrew Stevens} \\
+\author[umd,smx]{V.S. Subrahmanian} 
+\author[smx]{Joshua Terrell} \par
+
+% \address[cp]{Department of Computer Science and Software Engineering, California Polytechnic State University, San Luis Obispo} \\
+% \address[smx]{SentiMetrix, Inc} \\
+% \address[umd]{Department of Computer Science, University of Maryland} 
 %{\@degree} in \@field\par
 %\vspace{.1in}
 %University of California at {\@campus}\par

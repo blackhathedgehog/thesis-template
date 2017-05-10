@@ -24,6 +24,9 @@
 \usepackage{titlesec}
 \usepackage[breaklinks=true,hidelinks,pdfusetitle]{hyperref}
 \usepackage{ifthen}
+\usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+
+\def\CREATE{{\textsf{CREATE}}}
 
 \makeindex
 \makeglossaries
@@ -111,6 +114,17 @@
 \renewcommand{\baselinestretch}{1.66}
 
 \input{chapter-outline}
+
+\include{chapters/intro}
+\include{chapters/related}
+\include{chapters/challenge}
+\include{chapters/overview-of-create}
+\include{chapters/feature-engineering}
+\include{chapters/cars}
+\include{chapters/feature-selection}
+\include{chapters/training}
+\include{chapters/ensembles}
+\include{chapters/conclusion}
 
 \nocite{*}
 \bibliography{bibliography}

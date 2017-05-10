@@ -1,0 +1,444 @@
+\chapter{Ensemble Learning}\label{sec:ensembles}
+From our prior research \cite{kang2016ensemble,an2016map}, we know that ensembles frequently beat vanilla classifiers.
+As a consequence, we decided to try out ensembles on our data.
+From our set of 154 classifier data view runs, we  selected the 20 best runs (six of which
+were presented in detail in Section \ref{sec:ml}). We constructed
+a variety of ensembles of size 2 to 9 classifiers in each 
+from these runs, and via attrition zeroed in on
+the best performing ones. Our measure of performance of an ensemble
+was straightforward:
+
+\begin{quote}
+\textit{the \textsf{MA-MAE} of the ensemble must
+be higher than $0.851$, the \textsf{MA-MAE} of our best standalone method}
+(\textsf{SVM-Init-Ada-CARS}).
+\end{quote} 
+
+
+Our classifier ensembles were constructed in a straightforward way. Each ensemble
+consisted of a subset of classifiers from our list of 20
+best runs. Each classifier in the ensemble
+received an equal vote share (i.e., we did not attempt to weigh
+classifiers differently). We devised six different voting schemes to determine
+the ensemble prediction of the \textsf{Valence} based on the predictions
+of the constituent classifiers.  These voting schemes are defined below.
+
+\paragraph{Majority voting} A value of the \textsf{Valence} is selected
+if it was predicted by the majority (at least half) of classifiers in the
+ensemble. If such value does not exist, this method picks the \textit{most common} \textsf{Valence} in the training set\footnote{In our training set,
+this was \textsf{Valence=MILD}.}.
+
+\paragraph{Plurality voting} Given a parameter \textit{min\_votes}, a
+specific value of the \textsf{Valence} is selected if it is the most
+common value and more than \textit{min\_votes} classifiers in the
+ensemble predict it. If such value does not exist, 
+this method picks the \textit{most common} \textsf{Valence} in the training set.
+
+\paragraph{Majority\_favor\_MODERATE voting} 
+This scheme selects the majority
+value of predicted \textsf{Valence} if one exists, 
+the same way the \textit{majority} scheme works.
+However, if a \textit{majority} value does not exist, this voting
+scheme favors \textsf{Valence = MODERATE}: it selects this value if \textit{at least one}
+classifier predicts it. If no classifier predicts \textsf{Valence = MODERATE}, 
+this scheme defaults to the most common \textsf{Valence} in the training set.
+
+\paragraph{Plurality\_favor\_MODERATE voting} 
+This scheme selects
+the plurality value of \textsf{Valence} if it is predicted by more than
+\textit{min\_votes} votes. If such value does not exist, but at least
+one classifier predicts \textsf{Valence = MODERATE}, this scheme selects this value.
+If no \textsf{Valence = MODERATE} prediction exists in the ensemble, 
+the voting scheme defaults to the most common \textsf{Valence} in the training set.
+
+\paragraph{Simple Round voting}  This voting scheme simply finds
+the average prediction value among the ensemble classifiers,
+and rounds it to the nearest \textsf{Valence} value.
+
+\paragraph{Tuned Round voting}
+
+Our most complicated voting scheme acts like another hyper-parametrization search.
+
+The general idea behind this method is fairly straightforward, although the implementation
+does require some explanation.  The \textit{simple round voting} scheme assumes
+that the average valence of $2.6$ (out of $3$) points to the class \textsf{Valence = SEVERE},
+as $2.6$ is greater than the midpoint between the numeric \textsf{Valence} scores for
+\textsf{MODERATE} and \textsf{SEVERE} classes. However, \textsf{Valence} (despite
+how we choose to treat it on occasion) is \textbf{not} a continuous variable, but
+an ordinal one.  Therefore, $0.5$, $1.5$ and $2.5$ \textit{do not have to be} the threshold
+values separating the neighboring valence classes.  What should these values be?
+Well, we can treat this as yet another hyperparameter tuning problem, and find
+such values of the three threshold parameters that optimize the \textsf{MA-MAE} score.
+
+For our experiments we used the following threshold sets, which give rise to
+a search space of 343 possibilities.
+
+\begin{itemize}
+    \item \textsf{NONE/MILD threshold}: \textsf{0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75}
+    \item \textsf{MILD/MODERATE threshold}: \textsf{1.25, 1.3, 1.4, 1.5, 1.6, 1.7, 1.75}
+    \item \textsf{MODERATE/SEVERE threRshold}: \textsf{2.25, 2.3, 2.4, 2.5, 2.6, 2.7, 2.75}
+\end{itemize}
+
+%% TODO: insert algorithm here?
+
+To run all our ensembles through this voting mechanism we would have to generate
+in excess of 13.3 million combinations. To achieve this,  the \textit{tuned round voting}
+ensemble algorithm was parallelized onto a \textsf{c4.4xlarge} Cloud Instance on Amazon AWS. In addition, the mean votes of each of the 38,760 candidate ensembles were pre-computed using OpenBLAS \cite{open-blas}. Nonetheless, the entire computation took 8 hours with classifier ensembles of no larger than 6, whereas \textit{all}  Majority and Plurality schemes up to 9 completed on a single core in less time. %% to be honest, i don't 100% remember how long it took but it was a while. Less than an entire 5 - 9 overnight. 
+
+\section{Submitted Ensembles}
+
+Among the multitude of voting ensembles, we selected the five top performers (all
+providing us with 1.5 -- 3\% of lift over the best individual
+classifier) shown in Table \ref{tab:ourEnsembles}. Notably,
+all these ensembles used the \textit{tuned voting} ensemble voting, confirming to us that the tuning of the thresholds
+separating the neighboring \textsf{Valence} classes was a
+useful procedure. The \textsf{MA-MAE} scores
+reported in Table \ref{tab:ourEnsembles} were computed
+over the 325-record training set.
+
+As we could only submit three guesses, we had to make our final
+choices from these five ensembles. 
+\textit{
+We selected ensembles \textbf{A}, \textbf{B} and \textbf{C} for official submission.}
+
+\textsf{Ensemble B} consisted only of the Random Forest regressor
+run on the full data view, and our most accurate standalone
+classifier, SVM-initialized Na\"{i}ve Bayes AdaBoost on the Class Association
+Rules data view. It also was the best performer on the training set.
+
+\textsf{Ensembles A} and \textsf{C} were selected to diversify our 
+pool of guesses. \textsf{Ensemble A} was
+selected as the most accurate ensemble \textit{that did
+not feature classifiers trained on Class Association Rules alone}.
+We chose \textsf{Ensemble C} over \textsf{Ensemble E} because
+in a secondary run on the 108 \textsf{annotated\_by\_1} records
+\textsf{Ensemble E} had a drop in accuracy that worried us.
+Additionally, \textsf{Ensemble C} was far better than the other
+ensembles in properly recognizing the \textsf{Valence = SEVERE} class.
+
+
+
+
+% Ensemble A: 6 Classifiers. Tuned Voting Strategy with Thresholds at \textsf{0.7}, \textfs{1.6}, and \textfs{2.25}. 'RF-full', 'RF-reg-clf-full', 'RF-Reg-full', 'Lin-SVM-chi2-best', 'Lin-SVM-anova-best', 'DNN-full'.
+
+% Ensemble B: 2 Classifiers. Tuned Voting Strategy with Thresholds at \textsf{0.7}, \textfs{1.7}, and \textsf{2.3}. 'RF-Reg-full', 'SVM-Init-Ada-CARS'
+
+% Ensemble C: 6 Classifiers. Tuned Voting Strategy with Thresholds at \textfs{0.75}, \textsf{1.5}, and \textsf{2.25}. 'RF-Reg-full', 'Lin-SVM-chi2-best', 'RBF-SVR-mig-best', 'D&W-num', 'SVM-Init-rules', 'MNB-CARs'
+
+
+
+
+\begin{table}
+    \centering
+    \begin{tabular}{|cllc|}
+    \hline
+    \textsf{Name}  & \textsf{Classifiers}& \textsf{Voting}&
+    \textsf{MA-MAE}\\
+    \hline
+        & \textsf{RF-full}  &    & \\
+        & \textsf{RF-reg-clf-full} &  &  \\
+    \textsf{A}    & \textsf{RF-Reg-full} &   Tuned round & $0.865$\\
+        & \textsf{Lin-SVM-chi2-best} &     (0.7,1.6,2.25)& \\
+        & \textsf{Lin-SVM-anova-best} &  & \\
+        & \textsf{DNN-full}& & \\
+    \hline
+    \textsf{B}    & \textsf{RF-reg-full} & Tuned round& $0.882$ \\
+        & \textsf{SVM-Init-Ada-CARS} &   (0.7,1.7,2.3)& \\
+    \hline
+        & \textsf{RF-Reg-full} &  & \\
+        & \textsf{Lin-SVM-chi2-best} & & \\
+    \textsf{C}    & \textsf{RBF-SVR-mig-best} & Tuned round & $0.865$  \\
+        & \textsf{D\&W-num} &   (0.75,1.5,2.25)& \\
+        & \textsf{SVM-Init-Ada-CARS} & & \\
+        & \textsf{MNB-CARs} & & \\
+    \hline
+         &  \textsf{RF-reg-full} & & \\
+    \textsf{D}     &  \textsf{Lin-SVM-chi2-best} & Tuned round & $0.850$ \\
+         &  \textsf{Lin-SVM-ANOVA}&  (0.5,1.3,2.3) & \\
+         &  \textsf{DNN-full}  & & \\
+    \hline
+        & \textsf{RF-Reg-full} &  & \\
+    \textsf{E}    & \textsf{SVM-Init-Ada-CARS} & Tuned round & $0.866$ \\
+        & \textsf{DNN-full} &  (0.7,1.4,2.4) & \\
+        & \textsf{Lin-SVM-chi2-best} & & \\
+    \hline
+
+    \end{tabular}
+    \caption{Top five voting ensembles. The \textsf{MA-MAE} value
+    is computed on the 325-record training set.}
+    \label{tab:ourEnsembles}
+\end{table}
+
+
+
+
+
+\begin{table}
+\centering
+    \begin{tabular}{|l|c|c|c|c|}
+   \hline
+   \textsf{ \cellcolor{gray!15} Ensemble A } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+    \hline
+    \textsf{ NONE } & \cellcolor{gray!15} 34 & 10 & 1 & 0 \\ 
+    \textsf{ MILD } & 9 & \cellcolor{gray!15} 102 & 17 & 2 \\ 
+    \textsf{ MODERATE } & 1 & 15 & \cellcolor{gray!15} 48 & 18 \\ 
+    \textsf{ SEVERE } & 0 & 3 & 19 & \cellcolor{gray!15} 46 \\ 
+   \hline
+   \textsf{ \cellcolor{gray!15} ENSEMBLE B } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+    \hline
+    \textsf{ NONE } & \cellcolor{gray!15} 29 & 15 & 1 & 0 \\ 
+    \textsf{ MILD } & 8 & \cellcolor{gray!15} 116 & 4 & 2 \\ 
+    \textsf{ MODERATE } & 1 & 20 & \cellcolor{gray!15} 54 & 7 \\ 
+    \textsf{ SEVERE } & 0 & 1 & 20 & \cellcolor{gray!15} 47 \\ 
+   \hline
+   \textsf{ \cellcolor{gray!15} ENSEMBLE C } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+    \hline
+    \textsf{ NONE } & \cellcolor{gray!15} 31 & 14 & 0 & 0 \\ 
+    \textsf{ MILD } & 10 & \cellcolor{gray!15} 107 & 10 & 3 \\ 
+    \textsf{ MODERATE } & 2 & 21 & \cellcolor{gray!15} 42 & 17 \\ 
+    \textsf{ SEVERE } & 0 & 3 & 10 & \cellcolor{gray!15} 55 \\ 
+    \hline
+    \end{tabular}    
+    \caption{Confusion Matrices on the 325 document training set for the 3 submitted Ensembles}
+    \label{tab:EnsembleTrainConfusionMatrix}
+\end{table}
+
+\begin{table}
+\centering
+    \begin{tabular}{|l|c|c|c|}
+    \hline
+   \textsf{\cellcolor{gray!15} ENSEMBLE A} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\ 
+   \hline
+    \textsf{NONE} & 0.773 & 0.756 & \cellcolor{gray!15} 0.911 \\ 
+    \textsf{MILD} & \cellcolor{gray!15} 0.785 & \cellcolor{gray!15} 0.785 & 0.885 \\ 
+    \textsf{MODERATE} & 0.565 & 0.585 & 0.787 \\ 
+    \textsf{SEVERE} & 0.697 & 0.676 & 0.877 \\ 
+   \hline
+   \textsf{\cellcolor{gray!15} ENSEMBLE B} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\ 
+   \hline
+    \textsf{NONE} & 0.763 & 0.644 & 0.874 \\ 
+    \textsf{MILD} & 0.763 & \cellcolor{gray!15} 0.892 & \cellcolor{gray!15} 0.939 \\ 
+    \textsf{MODERATE} & 0.684 & 0.659 & 0.823 \\ 
+    \textsf{SEVERE} & \cellcolor{gray!15} 0.839 & 0.691 & 0.892 \\ 
+   \hline
+   \textsf{\cellcolor{gray!15} ENSEMBLE C} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\ 
+   \hline
+    \textsf{NONE} & 0.721 & 0.689 & 0.896 \\ 
+    \textsf{MILD} & \cellcolor{gray!15} 0.738 & \cellcolor{gray!15}  0.823 & 0.900 \\ 
+    \textsf{MODERATE} & 0.677 & 0.512 & 0.744 \\ 
+    \textsf{SEVERE} & 0.733 & 0.809 & \cellcolor{gray!15} 0.922 \\ 
+    \hline
+    \end{tabular}
+    \caption{Multi-class Precision, Recall and MAE on the 325 document training set for the 3 submitted Ensembles. Per-class MAE is normalized with the assumption that all predictions are maximally incorrect for each class.}
+    \label{tab:EnsembleTrainingMetrics}
+\end{table}
+
+\begin{table}
+\centering
+    \begin{tabular}{|c|c|c|c|}
+         \hline
+         \textsf{ Ensemble } & \textsf{ MA-MAE } & \textsf{ ROC-AUC } & \textsf{ $R^2$ } \\
+         \hline
+         \textsf{ \cellcolor{gray!15} A } & 0.865 & 0.795 & 0.622  \\
+         \textsf{ \cellcolor{gray!15} B } & \cellcolor{gray!15} 0.882 & \cellcolor{gray!15} 0.823 & \cellcolor{gray!15} 0.694  \\ 
+         \textsf{ \cellcolor{gray!15} C } & 0.865 & 0.801 & 0.629  \\ 
+         \hline
+    \end{tabular}
+    \caption{Summary metrics on the 325 document training set for each of the 3 submitted Ensembles. All applicable metrics are macro-averaged when necessary. Higher is better.}
+    \label{tab:EnsembleTrainingMAMetrics1}
+\end{table}
+
+\begin{table}
+\centering
+    \begin{tabular}{|c|c|c|c|c|}
+
+         \hline
+         \textsf{ Ensemble } & \textsf{ Precision } & \textsf{ Recall } & \textsf{ F1-Score } & \textsf{ Accuracy } \\ 
+         \hline
+         \textsf{ \cellcolor{gray!15} A } & 0.705 & 0.701 & 0.703 & 0.708 \\
+         \textsf{ \cellcolor{gray!15} B } & \cellcolor{gray!15} 0.762 & \cellcolor{gray!15} 0.722 & \cellcolor{gray!15} 0.738 & \cellcolor{gray!15} 0.757 \\ 
+         \textsf{ \cellcolor{gray!15} C } & 0.717 & 0.708 & 0.709 & 0.723 \\ 
+         \hline
+    \end{tabular}
+    \caption{Summary metrics on the 325 document training set for each of the 3 submitted Ensembles. All applicable metrics are macro-averaged when necessary. Higher is better.}
+    \label{tab:EnsembleTrainingMAMetrics2}
+\end{table}
+
+%% "Table ?? shows the precision"
+Table \ref{tab:EnsembleTrainConfusionMatrix} shows
+the confusion matrices of the three submitted ensembles
+on the 325-record training set. Table \ref{tab:EnsembleTrainingMAMetrics1}
+shows the precision, recall and \textsf{MAE} for each \textsf{Valence}
+class for each ensemble.  Table \ref{tab:EnsembleTrainingMAMetrics1}
+shows the \textsf{MA-MAE} as well as the ROC-AUC and the \textsf{$R^2$}
+metrics. Table \ref{tab:EnsembleTrainingMAMetrics2} shows overall
+precision, recall, f-measure and accuracy of the ensembles.
+
+%%% TO SKYLAR: why are MA-MAE scores different in Table 19 and
+%%%            in the data from which I built Table 16?
+%%%         Is it because Table 16 is actually on 433 records???
+%%%         If yes - we need to fix text.
+
+
+%% other things to notice: Regressors often had lower individual MA-MAE
+% scores compared to Classifiers, but Regressors often worked better as part 
+% of the Tuned Voting Ensemble
+
+%% Tuned Voting Ensembles without any classifiers that focused on only rules
+% did much better than Majority and Plurality schemes (a lift of 0.04 - 0.05). 
+% This gap got much smaller once we added association rules towards the end
+% of the competition.
+
+\section{Test Results}
+
+
+
+\begin{table}
+\centering
+    \begin{tabular}{|l|c|c|c|c|}
+       \hline
+       \textsf{ \cellcolor{gray!15} ENSEMBLE A } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+       \hline
+        \textsf{ NONE } & \cellcolor{gray!15} 20 & 10 & 1 & 0 \\ 
+        \textsf{ MILD } & 12 & \cellcolor{gray!15} 66 & 5 & 3 \\ 
+        \textsf{ MODERATE } & 2 & 16 & \cellcolor{gray!15} 23 & 5 \\ 
+        \textsf{ SEVERE } & 1 & 3 & 10 & \cellcolor{gray!15} 39 \\ 
+       \hline
+       \textsf{ \cellcolor{gray!15} ENSEMBLE B } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+       \hline
+        \textsf{ NONE } & \cellcolor{gray!15} 20 & 11 & 0 & 0 \\ 
+        \textsf{ MILD } & 4 & \cellcolor{gray!15} 68 & 13 & 1 \\ 
+        \textsf{ MODERATE } & 2 & 19 & \cellcolor{gray!15} 21 & 4 \\ 
+        \textsf{ SEVERE } & 0 & 8 & 7 & \cellcolor{gray!15} 38 \\ 
+       \hline
+       \textsf{\cellcolor{gray!15} ENSEMBLE C } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+       \hline
+        \textsf{ NONE } & \cellcolor{gray!15} 21 & 10 & 0 & 0 \\ 
+        \textsf{ MILD } & 7 & \cellcolor{gray!15} 64 & 13 & 2 \\ 
+        \textsf{ MODERATE } & 2 & 12 & \cellcolor{gray!15} 29 & 3 \\ 
+        \textsf{ SEVERE } & 0 & 3 & 9 & \cellcolor{gray!15} 41 \\ 
+       \hline
+    \end{tabular}
+    \caption{Confusion Matrices on the 216 document hidden test set for the 3 submitted Ensembles}
+    \label{tab:EnsembleTestConfusionMatrix}
+\end{table}
+
+\begin{table}
+\centering
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+       \textsf{\cellcolor{gray!15} ENSEMBLE A} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\ 
+       \hline
+        \textsf{NONE} & 0.571 & 0.645 & \cellcolor{gray!15} 0.871 \\ 
+        \textsf{MILD} & 0.695 & \cellcolor{gray!15} 0.767 & 0.867 \\ 
+        \textsf{MODERATE} & 0.590 & 0.500 & 0.739 \\ 
+        \textsf{SEVERE} & \cellcolor{gray!15} 0.830 & 0.736 & 0.881 \\ 
+       \hline
+       \textsf{\cellcolor{gray!15} ENSEMBLE B} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\ 
+       \hline
+        \textsf{NONE} & 0.769 & 0.645 & 0.882 \\ 
+        \textsf{MILD} & 0.642 & \cellcolor{gray!15} 0.791 & \cellcolor{gray!15} 0.890 \\ 
+        \textsf{MODERATE} & 0.512 & 0.457 & 0.707 \\ 
+        \textsf{SEVERE} & \cellcolor{gray!15} 0.884 & 0.717 & 0.855 \\ 
+       \hline
+       \textsf{\cellcolor{gray!15} ENSEMBLE C} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\ 
+       \hline
+        \textsf{NONE} & 0.700 & 0.677 & 0.892 \\ 
+        \textsf{MILD} & 0.719 & 0.744 & 0.861 \\ 
+        \textsf{MODERATE} & 0.569 & 0.630 & 0.794 \\ 
+        \textsf{SEVERE} & \cellcolor{gray!15} 0.891 & \cellcolor{gray!15} 0.774 & \cellcolor{gray!15} 0.906 \\ 
+       \hline
+    \end{tabular}
+    \caption{Multi-class Precision, Recall and MAE on the 216 document hidden test set for the 3 submitted Ensembles. Per-class MAE is normalized with the assumption that all predictions are maximally incorrect for each class.}
+    \label{tab:EnsembleTestMetrics}
+\end{table}
+
+%%% TO ALEX: do we want a "delta" where we look at all our stats and compare the difference between our train and our test?
+
+%%% TO SKYLAR: would be nice. I've done some spotcheck comparisons in
+%%%            the text. E.g., Ensemble 3 kills SEVERE in both precision
+%%%            and recall on the test set, while being so-so on 
+%%%            training set.
+%%% This is something we might add during revision.
+
+
+\begin{table}
+\centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textsf{ Ensemble } & \textsf{ MA-MAE } & \textsf{ ROC-AUC } & \textsf{ $R^2$ } \\
+        \hline
+       \cellcolor{gray!15} \textsf{ A } & 0.837 & 0.776 & 0.534 \\ 
+       \cellcolor{gray!15} \textsf{ B } & 0.833 & 0.763 & 0.539 \\ 
+       \cellcolor{gray!15} \textsf{ C } & \cellcolor{gray!15} 0.863 & \cellcolor{gray!15} 0.799 & \cellcolor{gray!15} 0.629 \\ 
+       \hline
+    \end{tabular}
+    \caption{Summary metrics on the 216 document hidden test set for each of the three submitted Ensembles. All applicable metrics are macro-averaged when necessary. Higher is better.}
+    \label{tab:EnsembleTestSummaryMetrics1}
+\end{table}
+
+\begin{table}
+\centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textsf{ Ensemble } & \textsf{ Precision } & \textsf{ Recall } & \textsf{ F1-Score } & \textsf{ Accuracy } \\
+        \hline
+       \cellcolor{gray!15} \textsf{ A } & 0.671 & 0.662 & 0.664 & 0.685 \\ 
+       \cellcolor{gray!15} \textsf{ B } & 0.702 & 0.652 & 0.671 & 0.681 \\ 
+       \cellcolor{gray!15} \textsf{ C } & \cellcolor{gray!15} 0.720 & \cellcolor{gray!15} 0.706 & \cellcolor{gray!15} 0.712 & \cellcolor{gray!15} 0.718 \\ 
+        \hline
+    \end{tabular}
+    \caption{Summary metrics on the 216 document hidden test set for each of the three submitted Ensembles. All applicable metrics are macro-averaged when necessary. Higher is better.}
+    \label{tab:EnsembleTestSummaryMetrics2}
+\end{table}
+
+
+
+The results of running our three submitted ensembles on the
+216-record test set are shown in Tables \ref{tab:EnsembleTestConfusionMatrix}---\ref{tab:EnsembleTestSummaryMetrics2}.
+Table \ref{tab:EnsembleTestConfusionMatrix} shows the confusion
+matrices of the three ensembles on the test set.
+
+It is worth immediately noting, by comparing confusion
+matrices in  Table \ref{tab:EnsembleTestConfusionMatrix}
+to those in Table \ref{tab:EnsembleTrainConfusionMatrix}
+(for the training set), that all three ensembles overall
+performed as expected and did not overfit the training
+set by much.  We note that all three ensembles
+ excelled at \textit{not making huge mistakes}:
+they had 10, 11, and 7 data points (respectively) with classification
+error of $2$ or more. This compares with 7, 5, and 8 such
+data points misclassified on (somewhat larger) training set.
+
+All three ensembles exhibited very similar performance
+on the 31 records with \textsf{Valence = NONE}.
+\textsf{Ensemble A} tended to underrate \textsf{MILD}
+cases, preferring to predict \textsf{Valence = NONE}
+when it made a mistake.  \textsf{Ensembles B} and \textsf{C}
+went in the other direction, overrating the majority
+of mistakes on cases with \textsf{Valence=MILD}.
+
+It is on cases with \textsf{Valence=MODERATE} and \textsf{Valence=SEVERE}
+\textsf{Ensemble C} showed a clearly better performance, both
+in terms of recall (correctly classifying 29 out of 46 \textsf{MODERATE}
+cases and 41 out of 53 \textsf{SEVERE} cases), and in terms
+of precision (keeping it above 50\% for \textsf{Valence=MODERATE},
+and allowing for only 5 false positives for \textsf{Valence=SEVERE}).
+These numbers, especially the precision for the
+\textsf{Valence=SEVERE} class wound up actually
+being better than the training set results (where
+\textsf{Ensemble C} had 20 false positives and 55 true positives
+in this)!
+
+Table \ref{tab:EnsembleTestMetrics} shows precision, recall
+and \textsf{MAE} for each valence class for each ensemble.
+Table \ref{tab:EnsembleTestSummaryMetrics1} shows the overall
+\textsf{MA-MAE}, \textsf{ROC-AUC} and \textsf{$R^2$} metrics for each
+ensemble, while Table \ref{tab:EnsembleTestSummaryMetrics2} summarizes
+precision, recall, f1-score and accuracy.
+
+As seen from Table \ref{tab:EnsembleTestMetrics}, \textsf{Ensemble C}
+wound up being the top scorer among our submissions.  
+As we learned shortly after the submission period closed, 
+\textsf{Ensemble C} \textit{wound up being the best overall predictor of
+patient condition severity} in the entire CEGS N-GRID 2016 Shared Task in Clinical Natural Language Processing (Track 2).

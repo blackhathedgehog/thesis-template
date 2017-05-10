@@ -1,0 +1,211 @@
+\chapter{The Challenge}\label{sec:challenge}
+
+The specification of Track 2 of the CEGS N-GRID 2016 Shared Task in Clinical Natural Language Processing  (also called the RDoC for Psychiatry Challenge) presented 
+the goal of this particular track of the challenge as:
+\begin{quote}
+\textsl{``Determine symptom severity in a domain for a patient, based on information included in their initial psychiatric evaluation. The domain has been rated on an ordinal scale of 0-3. There is one judgment per document, and one document per patient."}\cite{N-GRID}
+\end{quote}
+
+Research Domain Criteria (RDoC) is a framework for facilitating the study of human behavior,
+both normal and abnormal in various clinical domains. The RDoC provided the data,
+originally collected by Partners Healthcare Inc. and the Neuropsychiatric Genome-Scale and RDoC
+Individualized Domains (N-GRID) project at the Harvard Medical School \cite{N-GRID}.  The data
+was released to the challenge participants under a strict set of Rules of Conduct and the Data Use Agreement.
+
+As shown in Table \ref{tab:data1}, a total of 649 records were released,  broken into a training set of 433 files and 
+a test set of 216 files with no ground truth --- the latter released two days before
+the submissions were due. The initial release of the 433 patient records was broken into two categories: a suggested training set of 325 files, and 108 files
+called \textsf{annotated\_by\_1}. Since the contest organizers discouraged us from using the records from the \textsf{annotated\_by\_1} set as training set data, we focused 
+most of our training on the 325 record training set.
+
+Each record, originally stored in a single XML file, represented the information from the
+initial psychiatric consultation of a single patient. For each record in the training set the challenge organizers supplied the ground truth
+about the severity of the patient's psychiatric condition. This information was stored in
+a single feature of the data files called \textsf{Valence}.  Table \ref{tab:valence} shows the
+scale on which the patients' conditions were evaluated.  The judgment contained in the \textsf{Valence}
+field came from a clinical expert and was based solely on the symptoms and medical, social, 
+mental health, and family history captured in the provided data.
+
+\begin{table}
+    \centering
+    \begin{tabular}{|l|l|}
+    \hline
+    Total number of records released & 649  \\
+    \hline
+    Number of records in suggested training set    & 325  \\
+    \hline
+    Number of records in additional training set    & 108  \\
+    \hline
+    Number of records in test set   & 216 \\
+    \hline
+    \end{tabular}
+    \caption{Overview of released data.}
+    \label{tab:data1}
+\end{table}
+
+
+\begin{table}
+\centering
+    \begin{tabular}{|l|l|}
+    \hline
+    \textsf{Value} & \textsf{Meaning}\\
+    \hline
+    $0$  & \textsf{ABSENT}\\
+    $1$  & \textsf{MILD}\\
+    $2$  & \textsf{MODERATE}\\
+    $3$  & \textsf{SEVERE}\\
+    \hline
+    \end{tabular}
+    \caption{The scale of the target \textsf{Valence} variable in the N-GRID challenge training set data.}
+    \label{tab:valence}
+\end{table}
+
+The  XML files provided by the challenge organizers contained both structured data, which documented
+demographic information, mental health history, education, employment, financial status, family history of mental health, medical history, prescription and recreational drug use and a few other categories of information; and unstructured, free-form textual data, which documented self-reported symptoms and attending psychiatrists' notes on the patient and their condition. The data was in its raw, originally recorded form, and contained numerous typos, a lot of missing attributes, inconsistent use of abbreviations, and freeform text. The data was 
+also anonymized.
+
+Figure \ref{fig:sampleRecord} shows a \textit{notional (not real) record} created by us to illustrate the nature
+of the data --- it contains no
+information from the N-GRID dataset. However, this notional record
+can give the reader an idea of the type of information that the teams had access to while working on the challenge
+(as an aside, we note that the actual records contained significantly more data in them).
+
+\begin{figure}[t]
+\begin{tabular}{|l|}
+\hline
+\texttt{RAW DATA}\\
+     \\
+\texttt{    Name: John Doe}\\
+\\    
+  \texttt{  Age: 42}\\
+\\
+\texttt{    Sex: Male}\\
+\\    
+    \texttt{Referred by Emergency Services}
+\\    
+\texttt{    Has difficulty remembering if he has taken prescription drugs.}\\ \texttt{Accidental overdose.}
+\\    
+\texttt{    Referral Notes: Patient exhibits short-term memory loss - blood tests}\\
+\texttt{reveals mixed alcohol with
+    prescription. Stayed overnight.}\\
+\texttt{Found bruises on shoulders - possibly from falling.}\\
+\\   
+  \texttt{  DEPRESSION: YES}
+  \\
+\texttt{OCD: No}
+\\
+\texttt{    PANIC: Yes}
+\\    
+\texttt{    Prescriptions:}\\
+\texttt{         Advil (3 times a day)}\\
+\\         
+\texttt{    Formulation:}
+\\
+\texttt{    Patient has history of anxiety and bipolar.}\\
+\\    
+\texttt{    Recommendations:}
+\\
+\texttt{    Change medication to Alpazolam.}
+\\
+\texttt{    Require additional visit in 2 weeks.}
+\\    
+\hline
+\end{tabular}
+\caption{A synthetic record illustrating the type of clinical medical records data contained in the
+dataset released for Track 2 of the N-GRID challenge.}
+\label{fig:sampleRecord}
+\end{figure}
+
+Table \ref{tab:data2} contains a rough breakdown of the types of features found in the original data. 
+Table
+\ref{tab:textdata} contains the list of features from the original data that 
+were deemed by our team to be free-form text.
+
+
+%%% Moving the TEXT fields into a separate table.
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{|l|c|}
+    \hline
+    \textsf{Type of feature} & \textsf{Number of features}  \\
+    \hline
+    \textsf{All features} &       102      \\ 
+    \hline
+    \textsf{Demographic information} & 3  \\
+    \textsf{Harming Others Or Self} & 4 \\
+    \textsf{Symptoms of Mental Health Issues} & 18 \\ %%% PTSD, Psychosis, Eating Disoders, Depression, etc %%%
+    \textsf{Drug, Caffeine and Alcohol Use} & 5 \\
+    \textsf{Family History} & 4 \\
+    \textsf{Symptom Denial} & 8 \\
+    \textsf{Independence of Daily Activities} & 9 \\
+    \textsf{Marital Status and Abuse} & 3 \\
+    \textsf{Employment and Finances} & 4 \\
+    \textsf{Owns Firearms} & 1 \\
+    \textsf{Legal History} & 1 \\
+    \textsf{If Underage, Legal Guardian} & 2 \\
+    \textsf{Military History} & 2 \\
+    \textsf{Appearance} & 14 \\
+    \textsf{Mental Health} & 18 \\
+    \textsf{Physical Health} & 6 \\
+    \hline
+
+    \end{tabular}
+    \caption{Breakdown of features in the original N-GRID 2016 challenge Track 2 dataset by category.}
+    \label{tab:data2}
+    \end{table}
+  
+  \begin{table}[]
+    \centering
+    \begin{tabular}{|c|}  
+    \hline
+    \textsf{Free-form Entries} \\
+    \hline
+    \textsf{Chief Complaint (Patient's Own Words)}  \\
+    \textsf{History of Present Illness and Precipitating Events}  \\
+    \textsf{Previous Treatments}  \\
+    \textsf{Prior Medication Side-effects} \\
+    \textsf{Current Medication} \\
+    \textsf{Childhood History}  \\ %%% like how and where they grew up %%%
+    \textsf{Interpersonal Concerns} \\ %%% recent death in the family, etc %%%
+    \textsf{Education}  \\
+    \textsf{Family Living Situation}  \\
+    \textsf{Protective Factors}  \\
+    \textsf{Risk Factors}  \\
+    \textsf{Actions Taken}  \\
+    \textsf{Formulation}  \\
+    \textsf{Level of Care} \\
+    \hline
+    \end{tabular}
+    \caption{List of free-form text fields found in the original data for Track 2 of the N-GRID 2016 challenge.}
+    \label{tab:textdata}
+\end{table}
+
+
+The results of the challenge were evaluated using the a variant of the \textsf{Mean Absolute Error (MAE)} metric.  Given a vector $\mathbf{v} = (v_1,\ldots,v_n)$ of ground truth values and a prediction
+vector $\mathbf{p} = (p_1,\ldots, p_n)$, the \textsf{MAE} of the prediction is computed as 
+$$ MAE(\mathbf{p},\mathbf{v}) = \frac{1}{n}\sum_{i=1}^{n}| p_i - v_i|$$
+
+The \textsf{MAE} was altered by the challenge organizers so that the
+score was in the range of [0, 1], where 1 indicated a perfect score. The new \textsf{MA-MAE}, \textsf{Macro-Averaged Mean Absolute Error}, measure was computed
+by splitting the set of records into four categories (one per ground truth \textsf{Valence} value), computing the \textsf{MAE} for each of the four subsets independently, and combining
+the computed \textsf{MAE}s into a weighted sum. The normalizing factors
+for each of the component \textsf{MAE} values are the highest possible errors that
+can be achieved for a data point with the given \textsf{Valence} value
+($3$ for \textsf{Valence=0} and \textsf{Valence=3}, and $2$ for
+\textsf{Valence =1} and \textsf{Valence = 2}).
+To make the computed value correspond to the
+\textit{higher is better} intuition, the computed weighted sum was subtracted from $1$.
+The formula for computing the N-GRID Challenge version of \textsf{MAE} is:
+
+
+$$ MA\_MAE(\mathbf{p},\mathbf{v}) = 1 - 
+    \frac{(\frac{MAE(\mathbf{P0}, \mathbf{V0})}{3} + 
+     \frac{MAE(\mathbf{P1}, \mathbf{V1})}{2} + 
+     \frac{MAE(\mathbf{P2}, \mathbf{V2})}{2} + 
+     \frac{MAE(\mathbf{P3}, \mathbf{V3})}{3})}{4} $$
+
+
+Every team participating in the challenge was allowed to submit up to three final guesses. Each guess
+was essentially a vector of predicted valences for each case history 
+from the provided \textit{test set}.

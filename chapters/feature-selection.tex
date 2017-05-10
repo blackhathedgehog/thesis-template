@@ -1,0 +1,132 @@
+\chapter{Feature Selection}\label{sec:selection}
+
+Because we now had thousands of features to consider, we developed a
+feature selection procedure that subjected each feature in our dataset to a battery of tests. \textit{Features that failed
+every single  test were eliminated from consideration}.  
+The battery of tests is described below.
+
+\paragraph{Association Rule test} This decision procedure can be 
+boiled down to a simple statement: \textit{keep a feature if it
+appears in the antecedent of at least one of the 628 Class Association Rules
+in our dataset.}
+
+\paragraph{$\chi^2$ test for categorical features}
+We ran a $\chi^2$ test \cite{chisquare} for each categorical feature against the
+\textsf{Valence} variable.  This test checks whether there are sufficient
+grounds to believe that a specific categorical feature is associated
+with another categorical feature purely by coincidence.  We
+ set our confidence estimate at $95\%$ and rejected any 
+categorical feature whose $\chi^2$ test yielded a p-value higher than $0.05$.
+The $\chi^2$ test was implemented by using \textsf{scipy}'s
+\textsf{chisquare} function to compute the p-value of each categorical feature \cite{scipy}.
+
+%Our second test was to run a chi-squared test for each categorical feature.
+%A chi-square test attempts to compute the likelihood that a particular
+%categorical feature is associated with each class purely coincidentally. 
+%Suppose a feature is completely uncorrelated with a valence. This means
+%that the distribution of its categories will be very similar to that of 
+%the distribution of the ground truth labels. Now, suppose a \textbf{YES} value for
+%a particular categorical feature always corresponds to a \textbf{MILD} valence.
+%If we have sufficient number of \textbf{YES} observations, we can compute
+%the likelihood that this happened purely by chance. If this is likelihood is less  than 5\%, %then we say that this feature \textbf{passes the test} because we have
+%at least 95\% confidence that this relationship wasn't observed purely by chance. We used
+%scipy's \textsf{chisquare} function to compute the p-value of each categorical feature %\cite{scikit-learn}. 
+
+\paragraph{ANOVA F-test for continuous features} 
+ANOVA F-tests are used to test the significance of a regression model\cite{anova}.
+While we used the $\chi^2$ test to test for potential significance of our 
+categorical features, we used the multi-way ANOVA F-test for our numeric features.
+For each feature tested, we separated the data into four subsets, based on the 
+value of the target {Valence} attribute. We then randomly sampled from these four groups. We then tested the means and standard
+deviations in each of the four subsets to see if they represented similar or
+different distributions, and compared them across our multi-way samples to see if there is a statiscal bias. Similarly to the $\chi^2$ test, we set the 
+confidence level at 95\% and rejected any numeric attribute whose ANOVA F-test
+produced a p-value of more than $0.05$.  We uses 
+scikit-learn's \textsf{f\_classif} function to 
+compute the multi-way ANOVA tests \cite{scikit-learn}. 
+
+
+%Suppose that we take all of our features and
+%normalize them so that they are centered at 0 with unit standard deviation.
+%We then construct four sample groups, each corresponding to features with the same ground truth Valence
+%If we compare the variance of the mean for each group to the variance of all the samples and see
+%that it is measurably different, than we can say that Valence and the considered feature have
+%some form of correlation. If the variance is smaller, than we know that feature values close
+%to the that group's mean are more likely to be assigned the corresponding Valence. If the variance is larger,
+%then either the feature is not well correlated or outliers are typically assigned
+%to the corresponding Valence. We can improve upon this system by repeating this experiment
+%multiple times with a random sub-sample of the data. If we repeatably get the same results, despite looking
+%at different sub-samples of the data, we know that the feature is not over-fitting. Just like our chi-square test,
+%we require a 95\% confidence in order to pass this test.
+
+\paragraph{Mutual Information Gain test (MIG)}
+
+Mutual Information Gain is typically used in measuring the robustness of clustering methods.
+In unsupervised problems, MIG  is measured by calculating \textbf{P(X, Y)} - the probability that two variables \textbf{X} and \textbf{Y} occur in the same cluster - compared to the probability \textbf{P(X) * P(Y)} of their occurring in the same cluster by random chance. If there is a clear dependence  %% or anti-dependence
+between the two variables, then the probability of \textbf{P(X, Y)} will be higher %% or lower
+than \textbf{P(X) * P(Y)}. Recent research shows that MIG provides an additional level of feature selection in the context of textual classification and clustering \cite{Xu07}. In the case of supervised feature selection, we compare the entropies and distributions of \textsf{Valence} vs. each feature
+using $K$ Nearest Neighbors. At the time of the N-GRID Challenge, \textsf{scikit-learn} \cite{scikit-learn}
+did not have a completed implmentation of
+\textsf{mutual\_info\_classif}, but it was in the process of being developed. We ported \textsf{scikit-learn}'s partial implementation into our system.
+
+\paragraph{Linear SVM Recursive Feature Elimination}
+Our final test involved running \textsf{scikit-learn}'s version
+of the Support Vector Machine (SVM) classifier with
+a linear kernel \cite{cortes95} and observe whether the feature survived the
+\textit{Recursive Feature Elimination} process implemented
+within it. An advantage of using a linear SVM to find support vectors is that 
+it provided our system with multivariate feature selection.
+In addition, $\chi^2$ test and our Class Association Rules only worked on categorical features, 
+while Mutual Information Gain used a heuristic \cite{Xu07} to operate on continuous features.
+The Linear SVM recursive feature elimination allowed us an additional test on
+the continuous features in our dataset.
+
+\vspace{0.4cm}
+
+%% INSERT break here?
+Table \ref{tab:data3} contains the overview of the features that
+survived this process: i.e., that passed successfully at least one of
+the tests from the list above. We make a few observations here
+about the final shape of the dataset. Only \textsf{LIWC} did
+not contribute any features. All other means of enhancing
+non-textual features provided meaningful contributions, 
+with \textsf{cTakes}, original dataset, and, interestingly
+enough, our cumulative scores accounting for the
+majority of non-textual features.  All five \textsf{Common Value}
+features also made it. Our manual work on documenting
+medications resulted in 10 out of 47 medication
+features kept. 
+
+Another  interesting outcome of 
+this process was an essential depletion of direct natural language-related
+features from the dataset. Only 34 out of 300 features that came
+from \textsf{Word2Vec} were kept.  
+
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{|l|c|}
+    \hline
+    \textsf{Feature Category} & \textsf{Number of Features}  \\
+    \hline
+    \textsf{TOTAL} & 788 \\
+    \hline
+    \textsf{Original} & 30\\
+    \textsf{Cumulative scores} & 34 \\
+    \textsf{Medications} & 10 \\
+    \textsf{SentEmotion} & 6 \\
+    \textsf{cTakes} & 40 \\
+    \textsf{Common Value} & 5\\
+    \textsf{Word2Vec} & 34 \\
+    \textsf{Unigrams} & 1 \\
+    \hline
+    \textsf{CAR} & 628 \\
+     \hline
+    \end{tabular}
+    \caption{Description of the final set of features remaining in our
+    operational dataset after the feature selection (pruning) step.}
+    \label{tab:data3}
+\end{table}
+
+
+
