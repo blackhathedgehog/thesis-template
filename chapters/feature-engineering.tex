@@ -185,8 +185,39 @@ than $t$ percent of all records in the training set contained this value.
 
 We aggregated the notion of $t$-\textit{typicality} by introducing
 five \textit{common value features} into the dataset: one per typicality
-threshold. The common values feature for threshold $t$ was set to the total number of other features in the given record which contained $t$-\textit{typical} values.
+threshold. The common values feature for threshold $t$ was set to the total number of other features in the given record which contained $t$-\textit{typical} values. See the algorithm described in Algorithm ~\ref{alg:commonvaluealg} for more detail.
 These new features allowed us to quickly see whether a specific patient
 evaluation record yielded rare, atypical, unusual values for its features.
 
+\begin{algorithm}[H] \label{alg:commonvaluealg}
+ \SetKwData{RowRank}{RowRank}
+ \SetKwData{Array}{Array}
+ \SetKwInOut{Output}{output}
+ \SetKwInOut{F}{f}
  
+ \F{matrix of feature values}
+ \Output{5 new common value features}
+ 
+ \BlankLine
+ $num\_common\_values \gets$ \Array{5} \;
+ $common\_values \gets$ \Array{\RowRank{$F$}, 5} \;
+ \For{for each feature column $f$ in $F$}{
+    \emph{$freq \gets$ compute a histogram for $f$} \;
+    $most\_freq\_val \gets argmax(freq)$ \;
+    \For{$ndx, t$ in enumerate([0.51, 0.625, 0.75, 0.875, 0.90])}{
+        $f$ is common for threshold $t$ \;
+        \If{$max(freq) \geq t$}{
+            $num\_common\_values[ndx]$ += 1 \;
+            for each record \;
+            \For{$r$ in $f$}{
+                \If{$r$ == $most\_freq\_val$}{
+                    $common\_values[r, ndx]$ += 1
+                }
+            }
+        }
+    }
+ }
+ \emph{normalize output so it is in $0..1$} \\ 
+ $common\_values$ /= $num\_common\_values$ \\
+ \caption{How to compute our 5 Common Value Features}
+\end{algorithm}

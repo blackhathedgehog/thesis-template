@@ -68,9 +68,40 @@ $C5$ \cite{c5,c45}, which is non-exhaustive.
   rather than an actual meaningful relationship between these features and
   the \textsf{Valence} variable.
   
- Finally, we performed a \textit{Coverage Test} as proposed by Li et al \cite{cmar}. The purpose of the \textsf{Coverage Test} is to reduce the set of CARs to the ones that most accurately describe our data while avoiding excessive duplication. First, we sorted all of our generated CARs by confidence, support and $\chi^2$ score from best to worst. Starting with the first rule, all documents with features in the antecedent of the rule were marked. Then, we advanced onto the second round and marked all documents with features in the antecedent of that rule. The process was repeated until each input record was covered. After a single document has been marked five times, we removed it from future consideration. If a rule did not ``cover"" any considered documents, we discarded the rule. Once all documents have been marked five times, we discarded all remaining rules.
+Finally, we performed a \textit{Coverage Test} as proposed by Li et al \cite{cmar}. The purpose of the \textsf{Coverage Test} is to reduce the set of CARs to the ones that most accurately describe our data while avoiding excessive duplication. First, we sorted all of our generated CARs by confidence, support and $\chi^2$ score from best to worst. Starting with the first rule, all documents with features in the antecedent of the rule were marked. Then, we advanced onto the second round and marked all documents with features in the antecedent of that rule. The process was repeated until each input record was covered. After a single document has been marked five times, we removed it from future consideration. If a rule did not ``cover"" any considered documents, we discarded the rule. Once all documents have been marked five times, we discarded all remaining rules. For more information, see \ref{alg:coveragecheck}.
  
- %% TODO: insert algorithm here? 
+\begin{algorithm}[h]
+\SetKwData{Covers}{covers}
+\SetKwData{Rank}{Rank}
+\SetKwData{Zip}{Zip}
+\SetKwData{Array}{Array}
+\SetKwInOut{rules}{rules}
+\SetKwInOut{observations}{observations}
+\SetKwInOut{Output}{output}
+\SetKwInOut{k}{k}
+
+\rules{Sorted set of candidate association rules (best to worst)}
+\observations{Set of observations to cover}
+\k{number of observations to cover an observation}
+\Output{A set of covering association rules}
+\BlankLine
+
+$observation\_counts \gets$ \Array{\Rank{$observations$}} \;
+\For{$rule$ in $rules$}{
+    $keep \gets false$ \;
+    \For{$observation, count$ in \Zip{$observations$, $observation\_counts$}}{
+        \If{$count < k$ and \Covers{$rule, observation$}} {
+            $keep \gets true$\;
+            \emph{increment the corresponding $observation\_count$} \;
+        }
+    }
+    \If{$keep$}{
+        \emph{add our current $rule$ to $output$} \;
+    }
+}
+\caption{A naive CAR coverage check algorithm as described in \cite{cmar}} \label{alg:coveragecheck}
+\end{algorithm}
+ 
  
  Altogether, the pruning process reduced the total number of CARs extracted from the data from 345,373 to 628.
  \textit{For each extracted Class Association Rule, we added one binary feature to the dataset,

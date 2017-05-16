@@ -76,10 +76,52 @@ a search space of 343 possibilities.
 \begin{itemize}
     \item \textsf{NONE/MILD threshold}: \textsf{0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75}
     \item \textsf{MILD/MODERATE threshold}: \textsf{1.25, 1.3, 1.4, 1.5, 1.6, 1.7, 1.75}
-    \item \textsf{MODERATE/SEVERE threRshold}: \textsf{2.25, 2.3, 2.4, 2.5, 2.6, 2.7, 2.75}
+    \item \textsf{MODERATE/SEVERE threshold}: \textsf{2.25, 2.3, 2.4, 2.5, 2.6, 2.7, 2.75}
 \end{itemize}
 
 %% TODO: insert algorithm here?
+
+\begin{algorithm}[h]
+\SetKwData{Combinations}{Combinations}
+\SetKwData{MAMAE}{MA\_MAE}
+\SetKwData{Array}{Array}
+\SetKwData{RowSum}{RowSum}
+
+\SetKwInOut{truth}{truth}
+\SetKwInOut{predictions}{predictions}
+\SetKwInOut{k}{k}
+\SetKwInOut{thresholds}{thresholds}
+\SetKwInOut{Output}{output}
+
+\truth{correct Valence scores for each document}
+\predictions{predictions of all trained classifiers to attempt to construct an ensemble for}
+\k{max size of ensemble}
+\thresholds{boundary thresholds to use as triplets}
+\Output{The best ensemble from training data}
+\BlankLine
+
+$best\_ensemble \gets null$ \;
+$best\_score \gets 0$ \;
+\For{$i$ in $2..k$}{
+    \For{$candidate\_ensemble$ in \Combinations{$predictions$, $i$}}{
+        $predictions \gets $ \RowSum{$candidate\_ensemble$} \;
+        \For{$none, mild, moderate$ in $thresholds$}{
+            $rounded \gets [$ \\
+                $SEVERE$ if $v > moderate$ else \\
+                $MODERATE$ if $v > mild$ else \\
+                $MILD$ if $v > none$ else $NONE$ \\
+                for $v$ in $predictions$ \\
+            $]$ \;
+            $score \gets$ \MAMAE{$rounded$, $truth$} \;   
+            \If{$score > best\_score$}{
+                $best\_score \gets score$ \;
+                $best\_ensemble \gets ensemble, none, mild, moderate$ \;
+            }   
+        }
+    }
+}
+\caption{Tuned Round Voting} \label{alg:tunedround}
+\end{algorithm}
 
 To run all our ensembles through this voting mechanism we would have to generate
 in excess of 13.3 million combinations. To achieve this,  the \textit{tuned round voting}

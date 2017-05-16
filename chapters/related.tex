@@ -1,32 +1,42 @@
 \chapter{Related Work}\label{sec:related}
 
+Machine Learning is the name of the set of tasks given to computers with the goal of being able to identify future observations correctly, given a set of observations in the past. There are several different types of classification problems, but the two that we will be focusing on are supervised and unsupervised classification. 
+
 \section{Classification}
+
+Classification is the act of associating an \textit{observation} with a pattern \cite{liu2007web}. Formally, an observation -- typically represented as a collection of text, audiovisual or numerical \textit{features} -- is assigned one or more labels. A Classification Algorithm will attempt to associate sub-patterns in the observations with patterns. For example, if a data scientist were tasked with classifying days as \textit{hot} or \textit{cold}, the number of customers at a local ice cream store could be used as a feature. In general, we'd expect the store to be more busy on hot days, rather than cold days. However, this is not a guarantee -- for example, a particularly large birthday party could form an outlier, or perhaps ice cream stores are just more popular on Fridays, even though Fridays are no more likely to be warmer than any other day. 
+
+An excellent classifier would be able to identify hot days from cold ones with high \textit{precision} as well as miss very few obviously hot days (known as \textit{recall}). In most tasks, data scientists must balance between Recall and Precision. In some domains, recall is extremely important. For example, in the medical domain it is much less costly to have false positives while detecting cancer than it is to miss a patient entirely. On the other hand, some tasks prefer the opposite. A camera that detects if someone has run a red light would prefer to be precise rather than flag innocent drivers.
 
 \subsection{Supervised Classification}
 
+Supervised Classification is focused on identifying membership to one of a set of \textit{predetermined} patterns, typically called a \textit{label} \cite{liu2007web}. Supervised learning is called supervised because it is assigned a label by a human that is designed upon before the algorithm is trained. The \textit{training} step will be given each label, and the label must be trustworthy and consistent. Supervised Classification problems, therefore, tend to be somewhat expensive to collect data for. Every data point must be labeled and audited by a human, or perhaps several in order to form a clear consensus.
+
 \subsection{Unsupervised Classification}
 
-\section{Text Representation and Word Vectors}
+Unsupervised Classification does not have labels, and instead attempts to assign certain patterns to groups, typically called \textit{clusters} \cite{celebi2015partitional}. Some algorithms expect hints in the form of the exact number or size of clusters, while others attempt to figure out it out on their own. Unsupervised classification is often used to provide insight for humans, especially for topic modeling \cite{celebi2015partitional}. Unsupervised classification can also be used as an automated way to learn compression and feature extraction methodologies, which is what we will focus on in the section \ref{sec:wordvectors}.  
 
-Word Vectors \cite{word2vec} are currently the state of the method of representing text as features for supervised and unsupervised classification problems. However, the exact benefits of Word2Vec are unclear without going over a brief history of simpler means of representation and textual feature extraction.
+\section{Text Representation and Word Vectors} \label{sec:wordvectors}
+
+WordVectors \cite{word2vec} are currently the method of representing text as features for supervised and unsupervised classification problems. However, the exact benefits of WordVectors are unclear without going over a brief history of simpler means of representation and textual feature extraction.
 
 \subsection{Bag of Words}
 
 \par{
-The traditional method of text representation was a \textit{Bag of Words}. Bag of Words are unordered, sparse matrices where each column represents a unique term. As the English vocabulary $V$ is large and constantly changing, the first step of many Natural Language Processing tasks would be to scan over the corpus that you want to work with and build a list of each unique term. $V'$ is often smaller than $V$, but typos, proper names and slang all expand $V'$. For infinite datasets such as the Internet, one could utilize the \textit{Hashing Trick} \cite{} which runs each term into a hashing function that computes a random column index. This strategy has a few drawbacks such as colliding terms and having a $|V'|$ that is at least twice as large as your datasets predicted size, but no longer requires an additional pre-processing step.
+The traditional method of text representation was a \textit{Bag of Words}. Bag of Words are unordered, sparse matrices where each column represents a unique term. As the English vocabulary $V$ is large and constantly changing, the first step of many Natural Language Processing tasks would be to scan over the corpus that you want to work with and build a list of each unique term. $V'$ is often smaller than $V$, but typos, proper names and slang all expand $V'$. For infinite datasets such as the Internet, one could utilize the \textit{Hashing Trick} \cite{weinberger2009feature} which runs each term into a hashing function that computes a random column index. This strategy has a few drawbacks such as colliding terms and having a $|V'|$ that is at least twice as large as your datasets predicted size, but no longer requires an additional pre-processing step.
 }
 
+%% Add citation for Singular Value Decomposition
 \par{
-Some classifiers, such as Naive Bayes \cite{}, work with these very wide and sparse matrices very well. For classifiers that prefer small, dense matrices there are several strategies such as Latent Dirichlet Allocation \cite{} and Singular Value Decomposition \cite{} that attempt to extract the most frequent and meaningful co-occurring terms and represent them as a single value. In addition, additional information can be injected by extracting \textit{Parts of Speech} -- such as \textit{Noun} or \textit{Adjective} -- or constructing the \textit{lemma} of terms -- swimming $\rightarrow$ swim. 
+Some classifiers, such as naive Bayes \cite{rish2001empirical}, work with these very wide and sparse matrices very well. For classifiers that prefer small, dense matrices there are several strategies such as latent Dirichlet Allocation \cite{blei2003latent} and Singular Value Decomposition \cite{} that attempt to extract the most frequent and meaningful co-occurring terms and represent them as a single value. Moreover, additional information can be injected by extracting \textit{Parts of Speech} -- such as \textit{Noun} or \textit{Adjective} -- or constructing the \textit{lemma} of terms -- swimming $\rightarrow$ swim. 
 }
-
 
 \subsection{AutoEncoders}
 
 \par{
-AutoEncoders were originally designed as compression strategies for video and text and were a source of inspiration for WordVectors due to its ability to create graphical features in an unsupervised manner. Graphical data tends to be very high fidelity, and so transferring it over the Internet losslessly is expensive. In addition, small errors and loss of quality is not a significant issue for videos that display dozens of frames per second.
+AutoEncoders were originally designed as compression strategies for video and text and were a source of inspiration for WordVectors due to its ability to create graphical features in an unsupervised manner. Graphical data tends to be very high fidelity, and so transferring it over the Internet losslessly is expensive. In addition, small errors and loss of quality are not significant issues for videos that display dozens of frames per second.
 }
-
+%% Should it be "0...1" or are two periods standard?
 \par{
 Consider an grayscale image matrix $I$, that is \textsf{1000x1000} pixels. To simplify the problem, instead of a traditional RGB channel, each pixel is a float value in the range of $0..1$ indicating the grayscale of that pixel \footnote{which can be trivially converted to the RGB colorspace at render time}. Thus, the image contains 1 million floats if we were to represent it as a naive, dense matrix. Suppose our goal is to achieve 50\% compression. We would want to create two functions: $f_c$ and $f_d$. $f_c$ accepts $I$ and outputs a compressed version $C$ which is sent to the client, which $f_d$, then decodes and outputs $I'$. Our algorithm is trained to minimize the \textit{loss} which might be defined as the difference between $I$ and $I'$. Our black-box AutoEncoder would thus look something like this:
 }
@@ -35,14 +45,20 @@ Consider an grayscale image matrix $I$, that is \textsf{1000x1000} pixels. To si
 \[ f_d(C) => I' \]
 \captionof{figure}{S.t. $(I' - I)^2$ is minimized}
 
+%% Caption for AutoEncoder
 \par{
-Intuitively, there is a trade-off in $|C|$ and the loss. That is, smaller, more-compressed matrices will generally result in a higher loss $I'$. In a typical system, AutoEncoders are \textit{stacked}. That is, we might have three successive compression functions, each emitting a compressed matrix followed by three successive decompression function.  The exact implementations of the AutoEncoder is beyond the scope of this paper, but they generally rely on a Deep Neural Network \cite{}.
+Intuitively, there is a trade-off in $|C|$ and the loss. That is, smaller, more-compressed matrices will generally result in a higher loss $I'$. In a typical system, AutoEncoders are \textit{stacked}. That is, we might have three successive compression functions, each emitting a compressed matrix, followed by three successive decompression functions. The exact implementations of the AutoEncoder is beyond the scope of this paper, but they generally rely on a Deep Neural Network \cite{}.
 }
 
 \subsection{Word2Vec}
 
 \par{
-Mikolov's Word Vector model is one of the greatest recent developments in text classification \cite{word2vec}. Word Vectors attempt to improve upon the Bag of Words models in a few ways. First, the Bag of Words model treats every word as equally distant from each other. This is semantically incorrect. Words pairs such as \textit{lake} and \textit{swim} or \textit{queen} and \textit{king} are intuitively related compared to \textit{evil} and \textit{throttle}. This naturally leads into the second point: constructing a vectors with a limited number of dimensions such that similar words are closer than unrelated words. Third, suppose we could consume a corpus of billions of documents containing millions of unique terms and pre-compute our dense vectors. When we want to work with a new dataset, we no longer have to build our vocabulary and instead rely on our pre-computed vocabulary. Fourth, the system understands 
+Mikolov's Word Vector model is one of the greatest recent developments in text classification \cite{word2vec}. Mikolov identified a few weaknesses of the Bag of Words model. First, constructing Bag of Word features requires two passes over the data, which can be very costly when working with billions of documents. Second, if one could construct a model that captures all English literature with reasonable precision, then that model can be trained once and then used on nearly every English NLP problem. However, a "Universal English" Bag of Words model would be enormous and contain many unused words for most practical applications. The final and most significant flaw is how Bag of Words treats every word as equally distant from each other. This is intuitively imprecise. Words pairs such as \textit{lake} and \textit{swim} or \textit{queen} and \textit{king} are intuitively related compared to \textit{evil} and \textit{throttle}.
+}
+
+%% Why aren't these paragraphs indented?
+\par{
+Word vector solves this by constructing dense, continuous vectors with a limited number of dimensions such that similar words are closer than unrelated words. If vector space representations of \textit{queen} and \textit{king} were close, then we would have at least a partial success at solving the third problem. If our training model is capable of an online training that can handle billions of documents in a reasonable amuont of time, this would go a long way towards addressing the first two flaws.
 }
 
 \par{
@@ -50,7 +66,7 @@ Mikolov's initial paper described two methods: \textsf{skip-gram} and \textsf{co
 }
 
 \par{
-Consider $w_t$ which is defined as a word $w$ at location $t$. $w_t$'s context $C_t$ is defined all words preceding or succeeding $w_t$ within a window of some parameter $n$. Now, we define a pair of functions $f$ and $g$ that are analogous to $f_c$ and $f_d$ in an AutoEncoder. $f$ accepts a sparse 1D vector where each column corresponds to a term in the vocabulary, just as it is in the Bag of Words model. $f$ will output a dense vector $V$ analogous to the compressed image $C$ in an AutoEncoder. In \textsf{skip-gram}, $f$'s input is $w_t$ and $g$'s output is $C_t'$, where the \textit{loss} is the difference between the predicted $C_t'$ and the actual $C_t$. In \textit{cbow}, $f$'s input is $C_t$ and $g$'s output is $w_t'$, where the \textit{loss} is the difference between the predicted $w_t'$ and the actual $w_t$. 
+Consider $w_t$ which is defined as a word $w$ at location $t$. $w_t$'s context $C_t$ is defined by all words preceding or succeeding $w_t$ within a window of some parameter $n$. Now, we define a pair of functions $f$ and $g$ that are analogous to $f_c$ and $f_d$ in an AutoEncoder. $f$ accepts a sparse 1D vector where each column corresponds to a term in the vocabulary, just as it is in the Bag of Words model. $f$ will output a dense vector $V$ analogous to the compressed image $C$ in an AutoEncoder. In \textsf{skip-gram}, $f$'s input is $w_t$ and $g$'s output is $C_t'$, where the \textit{loss} is the difference between the predicted $C_t'$ and the actual $C_t$. In \textit{cbow}, $f$'s input is $C_t$ and $g$'s output is $w_t'$, where the \textit{loss} is the difference between the predicted $w_t'$ and the actual $w_t$. 
 }
 
 
@@ -73,11 +89,10 @@ Consider $w_t$ which is defined as a word $w$ at location $t$. $w_t$'s context $
 \end{figure}
 
 \par{
-By itself, the \textit{skip-gram} and \textit{cbow} models do not seem to be useful. The key contribution of Word Vectors is understanding that unlike in an AutoEncoder where a human is consuming the final output $C'$, \textit{we can throw away $g$ and its output entirely!}. Suppose we want to solve a second classification problem that has labels $L_t$. We can replace the original $g$ with a new $g'$ that accepts $V$ and predicts $L_t$! Thus, if we pre-compute a comprehensive look-up dictionary of words to $V$, we are able to greatly simplify the original dataset construction of multiple problems at the same time. 
+By itself, the \textit{skip-gram} and \textit{cbow} models do not seem to be useful. The key contribution of Word Vectors is understanding that unlike in an AutoEncoder where a human is consuming the final output $C'$, \textit{we can throw away $g$ and its output entirely!} Suppose we want to solve a second classification problem that has labels $L_t$. We can replace the original $g$ with a new $g'$ that accepts $V$ and predicts $L_t$! Thus, if we pre-compute a comprehensive look-up dictionary of words to $V$, we are able to greatly simplify the original dataset construction of multiple problems at the same time. 
 }
 
 \paragraph{Med2Vec} Building on top of Mikolov's Skip-Gram model, Choi et al. sought to create a deep learning document embedding strategy \cite{med2vec}. They had two datasets of 3 and 5 million documents with a combined total almost 30,000 medical codes that acted as a natural clustering. \textsf{Med2Vec} is constructed in a similar method as \textsf{Skip-Gram Word2Vec}, but treats sequential visits from the same patient as if they were sequence of words in a sentence. Compared to \textsf{Skip-Gram Word2Vec} and \textsf{GloVe}, \textsf{Med2Vec} achieves lower, better normalized Mutual Information Gain scores on Medication and Procedure, implying that it builds embeddings that are better clustered for those tasks \cite{GloVe}. While \textsf{SVD} of document text performed better than \textsf{Med2Vec}, \textsf{SVD} was demonstrated to have far lower interpretability \cite{svd}. 
-
 
 \section{Existing Medical Language Methodologies}
 
@@ -105,9 +120,9 @@ We built upon our prior work on detecting mental health disorders such as Depres
 and then a second layer to extract emotions such as anger or fear. The third layer generates a confidence value for each of the disorders that COPTADs is configured to recognize.
 
 %% TODO: cite apriori?
-\paragraph{Feature Selection using Association Rules} K. Rajeswari demonstrated the use of using \textsf{Apriori} rule mining in order to select features with high significance \cite{rajeswari}. First, the authors mined a set of rules with a small $k$ value. The second step was removing all features that did not appear in at least one rule. The third step was to re-run the \textsf{Apriori} but on a much larger $k$. Finally, when training the final classifier, they included only the features that were an antecedent in at least one rule. The higher $k$ value omits some useful association rules, but should take an order of magnitude less time to complete, due to the large reduction of $n$ candidate rules. The author noticed that on a dataset attempting to classify the risk of heart disease, that computation time was cut by a full two orders of magnitude with this procedure.
+\paragraph{Feature Selection using Association Rules} K. Rajeswari demonstrated the use of using \textsf{Apriori} rule mining in order to select features with high significance \cite{rajeswari}. First, the authors mined a set of rules with a small $k$ value. Then, they removed all features that did not appear in at least one rule. The third step was to re-run the \textsf{Apriori} but on a much larger $k$. Finally, when training the final classifier, they included only the features that were an antecedent in at least one rule. The higher $k$ value omits some useful association rules, but should take an order of magnitude less time to complete, due to the large reduction of $n$ candidate rules. The author noticed on a dataset attempting to classify the risk of heart disease that computation time was cut by a full two orders of magnitude with this procedure.
 
-\paragraph{Classification using Association Rules} B. Lui developed a technique on which to do Classification Based On Association Rules \cite{cba}. Lui's main contributions is the notion of a \textit{coverage check} in which rules are sorted in order of their predictive power -- confidence -- and rules that are subsumed by a more powerful rule are removed. At inference time, the first rule in which the antecedent is covered yields its corresponding class. w. Li improves upon this work by raising the minimum coverage of the \textit{coverage check} to 5 subsuming rules, as well as a stronger notion of rules using chi-$x^2$ tests \cite{cmar}. 
+\paragraph{Classification using Association Rules} B. Liu developed a technique on which to do Classification Based On Association Rules \cite{cba}. Liu's main contributions is the notion of a \textit{coverage check} in which rules are sorted in order of their predictive power -- confidence -- and rules that are subsumed by a more powerful rule are removed. At inference time, the first rule in which the antecedent is covered yields its corresponding class. Liu improves upon this work by raising the minimum coverage of the \textit{coverage check} to 5 subsuming rules, as well as a stronger notion of rules using chi-$x^2$ tests \cite{cmar}. 
 
 %%% TODO: expand this some more
 \paragraph{Other Work} Abbe \cite{abbe} describes different styles of psychiatric NLP and suggests four domains: observational studies, analysis of patient's thoughts and journals, medical records, and published literature. The NGRID challenge falls into the third category, whereas SentEmotion mostly focused on the second. Pestian \cite{pestian} created an NLP pipeline that could identify whether or not a suicide note was genuine using decision-tree-based classification rules along with AdaBoost and outperformed domain experts by reducing Type II errors by 30\%. Shiner \cite{shiner} processed 221 psychotherapy clinical notes to determine the quality of treatment that veterans were receiving. 
