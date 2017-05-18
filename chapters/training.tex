@@ -3,43 +3,45 @@
 %% 1. List all classifiers we used (including their origin - scikit-learn and such
 
 \begin{table}[t]
+{\small
     \centering
     \begin{tabular}{|l|l|l|l|}
-    \hline\hline
+    \hline
     \textsf{No.}& \textsf{Abbreviation} & \textsf{Classifier} & \textsf{Source}\\
-   
     \hline
-    1 & \textsf{MB NB} & \textsf{Multinomial/Bernoulli Na\"{i}ve Bayes} & \textsf{scikit-learn} \\
-    2 & \textsf{Lin-SVM}& \textsf{Linear Kernel SVM} & \textsf{scikit-learn} \\
-    3 & \textsf{RBF SVM}& \textsf{Radial Basis Function Kernel SVM} & \textsf{scikit-learn} \\
-    4 & \textsf{LogReg} & \textsf{Logistic Regression} & \textsf{scikit-learn}\\
-    5 & \textsf{RF} & \textsf{Random Forests} & \textsf{scikit-learn} \\
-    6 &  \textsf{Adaboost NB}& \textsf{AdaBoosted NaiveBayes}& \textsf{scikit-learn} \\
-    7 &  \textsf{KNN} & \textsf{K-Nearest Neighbors}& \textsf{scikit-learn} \\
-    8 & \textsf{SGD} & \textsf{Stochastic Gradient Descent}& \textsf{scikit-learn} \\
-    9 & \textsf{BRBM} & \textsf{Bernoulli Restricted Boltzmann Machine} & \textsf{scikit-learn}\\
+    1 & \textsf{SVM-Ini}& \textsf{AdaBoost \cite{adaboost} \cite{scikit-learn}} & \textsf{SentiMetrix} \\
+      & \textsf{AdaBoost} & \textsf{1 round Linear-SVM \cite{cortes95}},  49 rounds of NB  & \\
+    2 & \textsf{RF-reg-clf} & \textsf{Train: Regression RF \cite{ho95}}; & \textsf{SentiMetrix} \\
+      & & \textsf{inference: Classification RF} & \\
+    3 &\textsf{MI SVR}&  \textsf{Mutual-Info \cite{ross14} Feature Boosted SVM \cite{cortes95}} & \textsf{SentiMetrix} \\
+    4 & \textsf{CMAR} &  \textsf{Classifier on Multiple Assoc. Rules \cite{cmar}}& \textsf{SentiMetrix} \\
+    5 & \textsf{CMAR SVM}& \textsf{CMAR-Boosted \cite{cmar} SVM \cite{cortes95}}& \textsf{SentiMetrix} \\
+    6 & \textsf{CBA} & \textsf{Classification Based on Associations \cite{cba}}& \textsf{SentiMetrix} \\
+    \hline
+    7 & \textsf{MB NB} & \textsf{Multinomial/Bernoulli Na\"{i}ve Bayes \cite{scikit-learn}} & \textsf{scikit-learn} \\
+    8 & \textsf{Lin-SVM}& \textsf{Linear Kernel SVM \cite{cortes95}} & \textsf{scikit-learn} \\
+    9 & \textsf{RBF SVM}& \textsf{Radial Basis Function Kernel SVM \cite{scikit-learn}} & \textsf{scikit-learn} \\
+    10 & \textsf{LogReg} & \textsf{Logistic Regression \cite{scikit-learn}} & \textsf{scikit-learn}\\
+    11 & \textsf{RF} & \textsf{Random Forests \cite{ho95}} & \textsf{scikit-learn} \\
+    12 &  \textsf{Adaboost NB}& \textsf{AdaBoosted NaiveBayes \cite{adaboost}}& \textsf{scikit-learn} \\
+    13 &  \textsf{KNN} & \textsf{K-Nearest Neighbors \cite{scikit-learn}} & \textsf{scikit-learn} \\
+    14 & \textsf{SGD} & \textsf{Stochastic Gradient Descent \cite{scikit-learn}}& \textsf{scikit-learn} \\
+    15 & \textsf{BRBM} & \textsf{Bernoulli Restricted Boltzmann Machine \cite{scikit-learn}} & \textsf{scikit-learn}\\
     %followed by Random Forest/KNN/SVM/LogisticRegression} \\
-    10 & \textsf{RF-reg} & \textsf{Regression version of Random Forest}& \textsf{scikit-learn}\\
-    11 & \textsf{RF-reg-clf} & \textsf{Train: Regression RF; inference: Classification RF}& \textsf{scikit-learn}\\
-    12 & \textsf{Lin-SVM-reg} & \textsf{Regression version of Lin-SVM}& \textsf{scikit-learn}\\
-    13 & \textsf{RBF SVM-reg} & \textsf{Regression version of RBF SVM}& \textsf{scikit-learn}\\
+    16 & \textsf{RF-reg} & \textsf{Regression version of Random Forest \cite{ho95}}& \textsf{scikit-learn}\\
+    17 & \textsf{Lin-SVM-reg} & \textsf{Regression version of Lin-SVM \cite{cortes95}}& \textsf{scikit-learn}\\
+    18 & \textsf{RBF SVM-reg} & \textsf{Regression version of RBF SVM \cite{cortes95}}& \textsf{scikit-learn}\\
     \hline
-    14 & \textsf{DNN} & \textsf{Deep Neural Network}& \textsf{TensorFlow} \\
-    15 & \textsf{Deep \& Wide} & \textsf{Deep-and-Wide classifier}& \textsf{TensorFlow} \\
+    19 & \textsf{DNN} & \textsf{Deep Neural Network \cite{tensorflow}}& \textsf{TensorFlow} \\
+    20 & \textsf{Deep \& Wide} & \textsf{Deep-and-Wide classifier \cite{tensorflow}}& \textsf{TensorFlow} \\
     \hline
-    16 & \textsf{SVM-Init AdaBoost}& \textsf{AdaBoost: 1 ropund Linear-SVM,  49 rounds of NB}
-    & \textsf{SentiMetrix}\\
-    17 &\textsf{MI SVR}&  \textsf{Mutual-Info Feature Boosted SVM} & \textsf{SentiMetrix} \\
-    18 & \textsf{CMAR} &  \textsf{CMAR (Classifier on Multiple Assoc. Rules)}& \textsf{SentiMetrix} \\
-    19 & \textsf{CMAR SVM}& \textsf{CMAR-Boosted SVM}& \textsf{SentiMetrix} \\
-    20 & \textsf{CBA} & \textsf{CBA (Classification Based on Associations)}& \textsf{SentiMetrix} \\
-    \hline
-    21 & \textsf{XGBoost}& \textsf{XGBoost (scalable gradient boosting)}& \textsf{XGBoost} \\
-    22 & \textsf{C5} & \textsf{C5.0 Decision Tree Classifier} & \textsf{RuleQuest} \\
+    21 & \textsf{XGBoost}& \textsf{XGBoost (scalable gradient boosting) \cite{xgboost}}& \textsf{XGBoost} \\
+    22 & \textsf{C5} & \textsf{C5.0 Decision Tree Classifier \cite{c5}} & \textsf{RuleQuest} \\
     \hline
     \end{tabular}
     \caption{All the classifiers that were tried as part of the N-GRID Shared Task Challenge}
     \label{tab:Classifiers}
+}
 \end{table}
 
 %% 2. discuss how we ran any of the classifiers (where this is not immediately clear
@@ -56,7 +58,7 @@ implementation; and their so called \textit{deep and wide} classifier, which
 combines neural nets (deep learning) with Support Vector Machines (wide learning).
 Finally, two extra classifiers --- \textsf{XGBoost}, the boosted gradient classifier
 \cite{xgboost}, and Quinlan's implementation of
-C5.0 decision tree classifier \cite{c5} --- were used as well.
+C5.0 decision tree classifier \footnote{Due to licensing restrictions, we did not integrate C5.0 into the Common Pipeline Framework} \cite{c5} --- were used as well.
 
 Of the 22 classifiers we used two, the Random Forest Regression with Classification Inference (\textsf{RF-reg-clf} in Table \ref{tab:Classifiers}, and the SVM-initialized
 Na\"{i}ve Bayes AdaBoost were novel adaptations of the well-known
@@ -64,9 +66,6 @@ Random Forest \cite{breiman01, ho95} and AdaBoost \cite{adaboost} machine learni
 techniques. They are described below.
 
 \section{Classifier Adaptations}\label{sec:newml}
-
-%\footnote{Due to licensing restrictions, we did not integrate C5.0 into the Common
-%Pipeline Framework.}.
 
 Our two novel adaptations of existing classifiers are discussed below. 
 
@@ -83,7 +82,7 @@ In other project, SentiMetrix has had success by introducing a single round of a
 \begin{enumerate}
     \item \textsf{Step 1:} Run Linear kernel SVM classifier on input data. 
     \item \textsf{Step 2:} Analyze kernel decision function to reweigh document weights
-    \item \textsf{Step 3\ldots52:} Run Na\"{i}ve Bayes classification 49 times, reweighing document weights after every iteration
+    \item \textsf{Step 3\ldots52:} Run Na\"{i}ve Bayes classification 49 times, reweighing document weights after every iteration, and checking for convergence. Reaching convergence before 49 iterations will terminate the process early
 \end{enumerate}
 
 On the input N-GRID challenge data, linear kernel SVM produced better
@@ -106,7 +105,7 @@ and the desire of our team to see if certain minimalistic sets of
 features contain enough information for training the classifiers.
 
 Two of the nine data views listed, 
-\textsf{ANOVA-wordvector34} (the 34 \textsf{Word2Vec} features that
+\textsf{ANOVA-wordvector-34} (the 34 \textsf{Word2Vec} features that
 passed our ANOVA significance tests) and \textsf{WordVector}
 (all 300 \textsf{Word2Vec} features) yielded abysmal accuracy for
 all classifiers, and were eliminated from further consideration.
@@ -123,7 +122,7 @@ This view includes both numeric and categorical features that
 were present in the original dataset, as well as constructed
 using \textsf{cTAKES}, SentEmotion, and \textsf{LIWC} toolkits.}) as well
 as the best features that passed a specific test: $\chi^2$, ANOVA or Multiple
-Information Gain. We experimented briefly with top 100 and top 75 best features
+Information Gain. We experimented briefly with top 100, 82 \footnote{82 was the fewest number of significant features found by all three statistical measures -- $chi^2$ in this case} and top 75 best features
 for each of the tests, but settled on top 50, as this provided better accuracy.
 
 As a result, at the end of the process we had a total of $22\times 7 = 154$
@@ -159,10 +158,9 @@ we used 10-fold Cross Validation across the entire training set of 433 data poin
 from both the official training set and the additional \textsf{annotated\_by\_1}
 set, using a seeded stratified method provided by \textsf{scikit-learn}. For evaluating the pipelines, we performed a 10-fold Train \& Predict using the best hyper-parameters from the previous step across the organizer-recommended 325 training files. These predictions were eventually fed into the Ensemble Creation procedures. 
 
-% Towards the end of the competition, we occasionally 
-% switched to using a pipeline trained on the 325 records from the training set,
-% and predict the \textsf{Valence} of the 108 \textsf{annotated\_by\_1} dataset to make sure that there was no significant over-fitting (in lieu of the 10-fold cross validation). For every classifier except \textsf{XGBoost}, 
-% scores on the 108 \textsf{annotated\_by\_1} files were lower than the rest.
+Scikit-Learn provides some utilities for hyper-parameter selection \textsf{RandomizedSearchCV} and \textsf{GridSearchCV} which allow an engineer to specify a parameter grid which will be either randomly sampled or exhaustively searched, respectively. The sheer number of parametric combinations for some pipelines, such as Bernoulli RBM followed by a SVM, were forced to use RandomizedSearch but GridSearch is preferred otherwise \cite{scikit-learn}.
+
+Towards the end of the competition, we occasionally switched to using a pipeline trained on the 325 records from the training set, and predict the \textsf{Valence} of the 108 \textsf{annotated\_by\_1} dataset to make sure that there was no significant over-fitting (in addition to our usage of 10-fold cross validation). For every classifier except \textsf{XGBoost}, scores on the 108 \textsf{annotated\_by\_1} files were lower than the the 325 record test set.
 
 \begin{table}[]
     \centering
@@ -187,46 +185,47 @@ set, using a seeded stratified method provided by \textsf{scikit-learn}. For eva
     
 \end{table}
 
+{\renewcommand{\arraystretch}{0.75}%
 \begin{table}[]
     \centering
     \begin{tabular}{|l|c|c|c|c|}
              \hline
-   \cellcolor{gray!15} \textsf{RF-reg-full} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MODERATE} & \textsf{Pred SEVERE} \\
+   \cellcolor{gray!15} \textsf{RF-reg-full} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MOD.} & \textsf{Pred SEVERE} \\
    \hline
    \textsf{True NONE} & \cellcolor{gray!15} 13 & 28 & 4 & 0 \\
    \textsf{True MILD} & 3 & \cellcolor{gray!15} 94 & 33 & 0 \\
    \textsf{True MODERATE} & 0 & 16 & \cellcolor{gray!15} 60 & 6 \\
    \textsf{True SEVERE} & 0 & 4 & 49 & \cellcolor{gray!15} 15 \\
    \hline
-   \cellcolor{gray!15} \textsf{Lin-SVM-chi2-best} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MODERATE} & \textsf{Pred SEVERE} \\
+   \cellcolor{gray!15} \textsf{Lin-SVM-chi2-best} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MOD.} & \textsf{Pred SEVERE} \\
    \hline
    \textsf{True NONE} & \cellcolor{gray!15} 28 & 13 & 4 & 0 \\
    \textsf{True MILD} & 11 & \cellcolor{gray!15} 103 & 13 & 3 \\
    \textsf{True MODERATE} & 1 & 18 & \cellcolor{gray!15} 41 & 22 \\
    \textsf{True SEVERE} & 1 & 2 & 21 & \cellcolor{gray!15} 44 \\
    \hline
-   \cellcolor{gray!15} \textsf{RBF-SVR-mig-best} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MODERATE} & \textsf{Pred SEVERE} \\
+   \cellcolor{gray!15} \textsf{RBF-SVR-mig-best} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MOD.} & \textsf{Pred SEVERE} \\
    \hline
    \textsf{True NONE} & \cellcolor{gray!15} 17 & 25 & 3 & 0 \\
    \textsf{True MILD} & 10 & \cellcolor{gray!15} 90 & 30 & 0 \\
    \textsf{True MODERATE} & 1 & 26 & \cellcolor{gray!15} 43 & 12 \\
    \textsf{True SEVERE} & 1 & 1 & 47 & \cellcolor{gray!15} 19 \\
    \hline
-   \cellcolor{gray!15} \textsf{D\&W-num} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MODERATE} & \textsf{Pred SEVERE} \\
+   \cellcolor{gray!15} \textsf{D\&W-num} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MOD.} & \textsf{Pred SEVERE} \\
    \hline
    \textsf{True NONE} & \cellcolor{gray!15} 27 & 17 & 1 & 0 \\
    \textsf{True MILD} & 13 & \cellcolor{gray!15} 84 & 25 & 8 \\
    \textsf{True MODERATE} & 3 & 17 & \cellcolor{gray!15} 41 & 21 \\
    \textsf{True SEVERE} & 1 & 4 & 20 & \cellcolor{gray!15} 43 \\
    \hline
-   \cellcolor{gray!15} \textsf{SVM-Init-Ada-CARS} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MODERATE} & \textsf{Pred SEVERE} \\
+   \cellcolor{gray!15} \textsf{SVM-Init-Ada-CARS} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MOD.} & \textsf{Pred SEVERE} \\
    \hline
    \textsf{True NONE} & \cellcolor{gray!15} 30 & 2 & 13 & 0 \\
    \textsf{True MILD} & 9 & \cellcolor{gray!15} 96 & 21 & 4 \\
    \textsf{True MODERATE} & 1 & 16 & \cellcolor{gray!15} 58 & 7 \\
    \textsf{True SEVERE} & 0 & 2 & 14 & \cellcolor{gray!15} 52 \\
    \hline
-   \cellcolor{gray!15} \textsf{MNB-CARs} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MODERATE} & \textsf{Pred SEVERE} \\
+   \cellcolor{gray!15} \textsf{MNB-CARs} & \textsf{Pred NONE} & \textsf{Pred MILD} & \textsf{Pred MOD.} & \textsf{Pred SEVERE} \\
    \hline
    \textsf{True NONE} & \cellcolor{gray!15} 31 & 14 & 0 & 0 \\
    \textsf{True MILD} & 16 & \cellcolor{gray!15} 103 & 3 & 8 \\
@@ -236,53 +235,33 @@ set, using a seeded stratified method provided by \textsf{scikit-learn}. For eva
     \end{tabular}
     \caption{Individual Confusion Matrices on the 325 document training set for the 6 Classifiers in the Competition-Winning Ensemble.}
     \label{tab:BestEnsembleClassifiersConfusionMatrix}
-\end{table}
+\end{table}} \quad
+
 
 \begin{table}[]
     \centering
-    \begin{tabular}{|l|c|c|c|}
+    \begin{tabular}{|l|c|c|c|l|c|c|c|}
           \hline
-   \cellcolor{gray!15} \textsf{RF-reg-full} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\
+   \cellcolor{gray!15} \textsf{RF-reg-full} & \textsf{Prec.} & \textsf{Recall} & \textsf{MAE} & \cellcolor{gray!15} \textsf{D\&W-num} & \textsf{Prec.} & \textsf{Recall} & \textsf{MAE} \\
    \hline
-    \textsf{NONE} & \cellcolor{gray!15} 0.812 & 0.289 & 0.733 \\
-    \textsf{MILD} & 0.662 & 0.723 & \cellcolor{gray!15} 0.824 \\
-    \textsf{MODERATE} & 0.411 & \cellcolor{gray!15} 0.732 & 0.809 \\
-    \textsf{SEVERE} & 0.714 & 0.221 & 0.738 \\
+    \textsf{NONE} & \cellcolor{gray!15} 0.812 & 0.289 & 0.733 & \textsf{NONE} & 0.614 & 0.600 & \cellcolor{gray!15} 0.859 \\
+    \textsf{MILD} & 0.662 & 0.723 & \cellcolor{gray!15} 0.824 & \textsf{MILD} & \cellcolor{gray!15} 0.689 & \cellcolor{gray!15} 0.646 & 0.793 \\
+    \textsf{MODERATE} & 0.411 & \cellcolor{gray!15} 0.732 & 0.809 & \textsf{MODERATE} & 0.471 & 0.500 & 0.732 \\
+    \textsf{SEVERE} & 0.714 & 0.221 & 0.738 & \textsf{SEVERE} & 0.597 & 0.632 & 0.848 \\
    \hline
-   \cellcolor{gray!15} \textsf{Lin-SVM-chi2-best} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\
+   \cellcolor{gray!15} \textsf{Lin-SVM-chi2} & \textsf{Prec.} & \textsf{Recall} & \textsf{MAE} & \cellcolor{gray!15} \textsf{SVM-Init} & \textsf{Prec.} & \textsf{Recall} & \textsf{MAE} \\
    \hline
-    \textsf{NONE} & 0.683 & 0.622 & 0.844 \\
-    \textsf{MILD} & \cellcolor{gray!15} 0.757 &\cellcolor{gray!15}  0.792 & \cellcolor{gray!15} 0.885 \\
-    \textsf{MODERATE} & 0.519 & 0.500 & 0.744 \\
-    \textsf{SEVERE} & 0.638 & 0.647 & 0.863 \\
+    \textsf{NONE} & 0.683 & 0.622 & 0.844 & \textsf{NONE} & 0.750 & 0.667 & 0.793 \\
+    \textsf{MILD} & \cellcolor{gray!15} 0.757 &\cellcolor{gray!15}  0.792 & \cellcolor{gray!15} 0.885 & \textsf{MILD} & \cellcolor{gray!15} 0.828 & 0.738 & 0.854 \\
+    \textsf{MODERATE} & 0.519 & 0.500 & 0.744 & \textsf{MODERATE} & 0.547 & 0.707 & 0.848 \\
+    \textsf{SEVERE} & 0.638 & 0.647 & 0.863 & \textsf{SEVERE} & 0.825 & \cellcolor{gray!15} 0.765 & \cellcolor{gray!15} 0.912 \\
    \hline
-   \cellcolor{gray!15} \textsf{RBF-SVR-mig-best} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\
+   \cellcolor{gray!15} \textsf{RBF-SVR-mig} & \textsf{Prec.} & \textsf{Recall} & \textsf{MAE} & \cellcolor{gray!15} \textsf{MNB-CARs} & \textsf{Prec.} & \textsf{Recall} & \textsf{MAE} \\
    \hline
-    \textsf{NONE} & 0.586 & 0.378 & 0.757 \\
-    \textsf{MILD} & \cellcolor{gray!15} 0.634 & \cellcolor{gray!15} 0.692 & \cellcolor{gray!15} 0.787 \\
-    \textsf{MODERATE} & 0.350 & 0.524 & 0.745 \\
-    \textsf{SEVERE} & 0.613 & 0.279 & 0.739 \\
-   \hline
-   \cellcolor{gray!15} \textsf{D\&W-num} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\
-   \hline
-    \textsf{NONE} & 0.614 & 0.600 & \cellcolor{gray!15} 0.859 \\
-    \textsf{MILD} & \cellcolor{gray!15} 0.689 & \cellcolor{gray!15} 0.646 & 0.793 \\
-    \textsf{MODERATE} & 0.471 & 0.500 & 0.732 \\
-    \textsf{SEVERE} & 0.597 & 0.632 & 0.848 \\
-   \hline
-   \cellcolor{gray!15} \textsf{SVM-Init-Ada-CARS} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\
-   \hline
-    \textsf{NONE} & 0.750 & 0.667 & 0.793 \\
-    \textsf{MILD} & \cellcolor{gray!15} 0.828 & 0.738 & 0.854 \\
-    \textsf{MODERATE} & 0.547 & 0.707 & 0.848 \\
-    \textsf{SEVERE} & 0.825 & \cellcolor{gray!15} 0.765 & \cellcolor{gray!15} 0.912 \\
-   \hline
-   \cellcolor{gray!15} \textsf{MNB-CARs} & \textsf{Precision} & \textsf{Recall} & \textsf{MAE} \\
-   \hline
-    \textsf{NONE} & 0.585 & 0.689 & 0.896 \\
-    \textsf{MILD} & 0.660 & \cellcolor{gray!15} 0.792 & 0.866 \\
-    \textsf{MODERATE} & \cellcolor{gray!15} 0.810 & 0.415 & 0.677 \\
-    \textsf{SEVERE} & 0.757 & 0.824 & \cellcolor{gray!15} 0.902 \\
+    \textsf{NONE} & 0.586 & 0.378 & 0.757 & \textsf{NONE} & 0.585 & 0.689 & 0.896 \\
+    \textsf{MILD} & \cellcolor{gray!15} 0.634 & \cellcolor{gray!15} 0.692 & \cellcolor{gray!15} 0.787 & \textsf{MILD} & 0.660 & \cellcolor{gray!15} 0.792 & 0.866 \\
+    \textsf{MODERATE} & 0.350 & 0.524 & 0.745 & \textsf{MODERATE} & \cellcolor{gray!15} 0.810 & 0.415 & 0.677 \\
+    \textsf{SEVERE} & 0.613 & 0.279 & 0.739 & \textsf{SEVERE} & 0.757 & 0.824 & \cellcolor{gray!15} 0.902 \\
    \hline
     \end{tabular}
     \caption{Multi-class Precision, Recall and MAE on the 325 document training set for the 6 Classifiers in the Competition-Winning Ensemble. Per-class MAE is normalized with the assumption that all predictions are maximally incorrect for each class.}
@@ -291,26 +270,18 @@ set, using a seeded stratified method provided by \textsf{scikit-learn}. For eva
 
 \begin{table}[]
 \centering
-    \begin{tabular}{|l|c|c|c|}
-        \hline
-        \textsf{ Classifier } & \textsf{ MA-MAE } & \textsf{ ROC-AUC } & \textsf{ $R^2$ } \\
-        \hline
-      \cellcolor{gray!15} \textsf{ RF-reg-full } & 0.776 & 0.683 & \cellcolor{gray!15} 0.554 \\ 
-       \cellcolor{gray!15} \textsf{ Lin-SVM-chi2-best } & 0.834 & 0.765 & 0.521  \\ 
-       \cellcolor{gray!15} \textsf{ RBF-SVR-mig-best } & 0.757 & 0.657 & 0.476 \\ 
-       \cellcolor{gray!15} \textsf{ D\&W-num } & 0.808 & 0.721 & 0.394 \\ 
-       \cellcolor{gray!15} \textsf{ SVM-Init-Ada-CARS } & \cellcolor{gray!15} 0.851 & \cellcolor{gray!15} 0.811 & 0.515 \\ 
-       \cellcolor{gray!15} \textsf{ MNB-CARs } & 0.835 & 0.773 & 0.459  \\
-        \hline
-    \end{tabular}
-    \caption{Summary metrics on the 325 document training set for each of the 6 Classifiers in the Competition-Winning Ensemble. All applicable metrics are macro-averaged when necessary. Higher is better.}
-    \label{tab:BestEnsembleClassifiersMAMetrics1}
-\end{table}
-\begin{table}[]
-\centering
-
     \begin{tabular}{|l|c|c|c|c|}
-    \hline
+        \hline
+        \textsf{ Classifier } & \textsf{ MA-MAE } & \textsf{ ROC-AUC } & \textsf{ $R^2$ } & \\
+        \hline
+      \cellcolor{gray!15} \textsf{ RF-reg-full } & 0.776 & 0.683 & \cellcolor{gray!15} 0.554 & \\
+       \cellcolor{gray!15} \textsf{ Lin-SVM-chi2-best } & 0.834 & 0.765 & 0.521 & \\ 
+       \cellcolor{gray!15} \textsf{ RBF-SVR-mig-best } & 0.757 & 0.657 & 0.476 & \\ 
+       \cellcolor{gray!15} \textsf{ D\&W-num } & 0.808 & 0.721 & 0.394 & \\ 
+       \cellcolor{gray!15} \textsf{ SVM-Init-Ada-CARS } & \cellcolor{gray!15} 0.851 & \cellcolor{gray!15} 0.811 & 0.515 & \\ 
+       \cellcolor{gray!15} \textsf{ MNB-CARs } & 0.835 & 0.773 & 0.459 & \\
+        \hline
+
     \textsf{ Classifier } & \textsf{ Precision } & \textsf{ Recall } & \textsf{ F1-Score } & \textsf{ Accuracy } \\ 
     \hline
     \cellcolor{gray!15} \textsf{ RF-reg-full } & 0.650 & 0.491 & 0.495 & 0.560 \\ 
@@ -325,15 +296,11 @@ set, using a seeded stratified method provided by \textsf{scikit-learn}. For eva
     \label{tab:BestEnsembleClassifiersMAMetrics2}
 \end{table}
 
-Of the 154 total runs, we eventually chose 20 best learners
-to use in the next step: ensemble training.  Of these 20 runs,
-10 runs shown in Table \ref{tab:Best6ClassifierNames} participated
-in the five \textit{best} ensembles (see Section \ref{sec:ensembles}.)
-For each run, we show the classifier used, the data view on which it
-ran and the abbreviation we use in this section
-and in Section \ref{sec:ensembles} to refer to it.  
+Of the 154 total runs, we selected the 12 learners who scored above 0.60
+to use in the next step: ensemble training \footnote{the exact threshold is coincidentally -- there was a large gap between 0.60 and a next-best cluster classifier+dataview combinations of scores around 0.54. Altogether, more than half of classifier+dataview combinations did only slightly better or equal to random}.  Of these 12 learners, 10 participated in the five \textit{best} ensembles (see Section \ref{sec:ensembles}.) These 10 are shown in Table \ref{tab:Best6ClassifierNames}
+ which associates an abbreviated naming convention for each classfier+dataview.
 
-For the sake of space, we limit the demonstration and discussion
+For the sake of brevity, we limit the demonstration and discussion
 of the results of the individual classifiers to the six
 classifiers from Table \ref{tab:Best6ClassifierNames} which
 constituted our top performing classification ensemble.
@@ -354,10 +321,8 @@ the numeric and categorical features.
 
 Table \ref{tab:BestEnsembleClassifiersConfusionMatrix} contains the
 confusion matrices for these six runs, Table \ref{tab:BestEnsembleClassifiersMetrics}
-shows precision, recall and \textsf{MAE} for each class, while Tables \ref{tab:BestEnsembleClassifiersMAMetrics1} and \ref{tab:BestEnsembleClassifiersMAMetrics2}
-document the overall accuracy metrics: \textsf{MA-MAE}, \textsf{RoC-AUC}  and
-the \textsf{$R^2$} metrics (Table \ref{tab:BestEnsembleClassifiersMAMetrics1}),
-and precision, recall, f-score and accuracy (Table \ref{tab:BestEnsembleClassifiersMAMetrics2}).  We discuss the work of individual classifiers
+shows precision, recall and \textsf{MAE} for each class, while Table~ \ref{tab:BestEnsembleClassifiersMAMetrics2}
+document the overall accuracy metrics: \textsf{MA-MAE}, \textsf{RoC-AUC}, precision, recall, f-score and accuracy.  We discuss the work of individual classifiers
 below.
 
 Our \textsf{RandomForest} regression run on the full data view (\textsf{RF-reg-full})
@@ -384,15 +349,14 @@ and \textsf{SEVERE} valences.
 
 TensorFlow's  Deep and Wide  classifier, run on all our
 numeric and categorical attributes, excluding CAR and \textsf{Word2Vec}
-attributes ((\textsf{D\&W-num}) had no significant distinctive features as compared to
+attributes (\textsf{D\&W-num}) had no significant distinctive features as compared to
 other runs. It did the worst on properly capturing \textsf{MILD} valences
 (\textsf{MILD} recall), and tended to admit more "big" mistakes
 (misclassifications two or more classes apart) than some other methods. 
 But it kept the overall number of misclassified cases reasonable,
 and hence earned a \textsf{MA-MAE} in excess of 0.8.
 
-
-Our overall best single run came from our own Adaboost classifier
+Our overall best single run came from our own AdaBoost classifier
 trained on a single round of SVM followed by 49 rounds of Na\"{i}ve
 Bayes applied to the dataset consisting solely of \textsf{CAR} attributes
 (\textsf{SVM-Init-Ada-CARs}, see Section \ref{sec:newml}). 

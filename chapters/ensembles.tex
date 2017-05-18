@@ -152,11 +152,11 @@ Rules data view. It also was the best performer on the training set.
 pool of guesses. \textsf{Ensemble A} was
 selected as the most accurate ensemble \textit{that did
 not feature classifiers trained on Class Association Rules alone}.
-We chose \textsf{Ensemble C} over \textsf{Ensemble E} because
+We chose \textsf{Ensemble C} over \textsf{Ensemble E} despite its marginally lower MA-MAE score, because
 in a secondary run on the 108 \textsf{annotated\_by\_1} records
 \textsf{Ensemble E} had a drop in accuracy that worried us.
 Additionally, \textsf{Ensemble C} was far better than the other
-ensembles in properly recognizing the \textsf{Valence = SEVERE} class.
+ensembles in properly recognizing the \textsf{Valence = SEVERE} class. Thus, if the withheld test set actually had a large amount of \textsf{SEVERE} Valence scores, we would expect this classifier to perform much better than the other four. 
 
 
 
@@ -219,21 +219,21 @@ ensembles in properly recognizing the \textsf{Valence = SEVERE} class.
 \centering
     \begin{tabular}{|l|c|c|c|c|}
    \hline
-   \textsf{ \cellcolor{gray!15} Ensemble A } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+   \textsf{ \cellcolor{gray!15} Ensemble A } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MOD. } & \textsf{ Pred SEVERE } \\ 
     \hline
     \textsf{ NONE } & \cellcolor{gray!15} 34 & 10 & 1 & 0 \\ 
     \textsf{ MILD } & 9 & \cellcolor{gray!15} 102 & 17 & 2 \\ 
     \textsf{ MODERATE } & 1 & 15 & \cellcolor{gray!15} 48 & 18 \\ 
     \textsf{ SEVERE } & 0 & 3 & 19 & \cellcolor{gray!15} 46 \\ 
    \hline
-   \textsf{ \cellcolor{gray!15} ENSEMBLE B } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+   \textsf{ \cellcolor{gray!15} ENSEMBLE B } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MOD. } & \textsf{ Pred SEVERE } \\ 
     \hline
     \textsf{ NONE } & \cellcolor{gray!15} 29 & 15 & 1 & 0 \\ 
     \textsf{ MILD } & 8 & \cellcolor{gray!15} 116 & 4 & 2 \\ 
     \textsf{ MODERATE } & 1 & 20 & \cellcolor{gray!15} 54 & 7 \\ 
     \textsf{ SEVERE } & 0 & 1 & 20 & \cellcolor{gray!15} 47 \\ 
    \hline
-   \textsf{ \cellcolor{gray!15} ENSEMBLE C } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+   \textsf{ \cellcolor{gray!15} ENSEMBLE C } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MOD. } & \textsf{ Pred SEVERE } \\ 
     \hline
     \textsf{ NONE } & \cellcolor{gray!15} 31 & 14 & 0 & 0 \\ 
     \textsf{ MILD } & 10 & \cellcolor{gray!15} 107 & 10 & 3 \\ 
@@ -277,23 +277,13 @@ ensembles in properly recognizing the \textsf{Valence = SEVERE} class.
 
 \begin{table}
 \centering
-    \begin{tabular}{|c|c|c|c|}
-         \hline
-         \textsf{ Ensemble } & \textsf{ MA-MAE } & \textsf{ ROC-AUC } & \textsf{ $R^2$ } \\
-         \hline
-         \textsf{ \cellcolor{gray!15} A } & 0.865 & 0.795 & 0.622  \\
-         \textsf{ \cellcolor{gray!15} B } & \cellcolor{gray!15} 0.882 & \cellcolor{gray!15} 0.823 & \cellcolor{gray!15} 0.694  \\ 
-         \textsf{ \cellcolor{gray!15} C } & 0.865 & 0.801 & 0.629  \\ 
-         \hline
-    \end{tabular}
-    \caption{Summary metrics on the 325 document training set for each of the 3 submitted Ensembles. All applicable metrics are macro-averaged when necessary. Higher is better.}
-    \label{tab:EnsembleTrainingMAMetrics1}
-\end{table}
-
-\begin{table}
-\centering
     \begin{tabular}{|c|c|c|c|c|}
-
+         \hline
+         \textsf{ Ensemble } & \textsf{ MA-MAE } & \textsf{ ROC-AUC } & \textsf{ $R^2$ } & \\
+         \hline
+         \textsf{ \cellcolor{gray!15} A } & 0.865 & 0.795 & 0.622 & \\
+         \textsf{ \cellcolor{gray!15} B } & \cellcolor{gray!15} 0.882 & \cellcolor{gray!15} 0.823 & \cellcolor{gray!15} 0.694 & \\ 
+         \textsf{ \cellcolor{gray!15} C } & 0.865 & 0.801 & 0.629 & \\ 
          \hline
          \textsf{ Ensemble } & \textsf{ Precision } & \textsf{ Recall } & \textsf{ F1-Score } & \textsf{ Accuracy } \\ 
          \hline
@@ -309,11 +299,10 @@ ensembles in properly recognizing the \textsf{Valence = SEVERE} class.
 %% "Table ?? shows the precision"
 Table \ref{tab:EnsembleTrainConfusionMatrix} shows
 the confusion matrices of the three submitted ensembles
-on the 325-record training set. Table \ref{tab:EnsembleTrainingMAMetrics1}
+on the 325-record training set. Table \ref{tab:EnsembleTrainingMetrics}
 shows the precision, recall and \textsf{MAE} for each \textsf{Valence}
-class for each ensemble.  Table \ref{tab:EnsembleTrainingMAMetrics1}
-shows the \textsf{MA-MAE} as well as the ROC-AUC and the \textsf{$R^2$}
-metrics. Table \ref{tab:EnsembleTrainingMAMetrics2} shows overall
+class for each ensemble.  Table \ref{tab:EnsembleTrainingMAMetrics2}
+shows the \textsf{MA-MAE} as well as the ROC-AUC, 
 precision, recall, f-measure and accuracy of the ensembles.
 
 %%% TO SKYLAR: why are MA-MAE scores different in Table 19 and
@@ -339,21 +328,21 @@ precision, recall, f-measure and accuracy of the ensembles.
 \centering
     \begin{tabular}{|l|c|c|c|c|}
        \hline
-       \textsf{ \cellcolor{gray!15} ENSEMBLE A } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+       \textsf{ \cellcolor{gray!15} ENSEMBLE A } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MOD. } & \textsf{ Pred SEVERE } \\ 
        \hline
         \textsf{ NONE } & \cellcolor{gray!15} 20 & 10 & 1 & 0 \\ 
         \textsf{ MILD } & 12 & \cellcolor{gray!15} 66 & 5 & 3 \\ 
         \textsf{ MODERATE } & 2 & 16 & \cellcolor{gray!15} 23 & 5 \\ 
         \textsf{ SEVERE } & 1 & 3 & 10 & \cellcolor{gray!15} 39 \\ 
        \hline
-       \textsf{ \cellcolor{gray!15} ENSEMBLE B } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+       \textsf{ \cellcolor{gray!15} ENSEMBLE B } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MOD. } & \textsf{ Pred SEVERE } \\ 
        \hline
         \textsf{ NONE } & \cellcolor{gray!15} 20 & 11 & 0 & 0 \\ 
         \textsf{ MILD } & 4 & \cellcolor{gray!15} 68 & 13 & 1 \\ 
         \textsf{ MODERATE } & 2 & 19 & \cellcolor{gray!15} 21 & 4 \\ 
         \textsf{ SEVERE } & 0 & 8 & 7 & \cellcolor{gray!15} 38 \\ 
        \hline
-       \textsf{\cellcolor{gray!15} ENSEMBLE C } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MODERATE } & \textsf{ Pred SEVERE } \\ 
+       \textsf{\cellcolor{gray!15} ENSEMBLE C } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MOD. } & \textsf{ Pred SEVERE } \\ 
        \hline
         \textsf{ NONE } & \cellcolor{gray!15} 21 & 10 & 0 & 0 \\ 
         \textsf{ MILD } & 7 & \cellcolor{gray!15} 64 & 13 & 2 \\ 
@@ -406,23 +395,14 @@ precision, recall, f-measure and accuracy of the ensembles.
 
 \begin{table}
 \centering
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \textsf{ Ensemble } & \textsf{ MA-MAE } & \textsf{ ROC-AUC } & \textsf{ $R^2$ } \\
-        \hline
-       \cellcolor{gray!15} \textsf{ A } & 0.837 & 0.776 & 0.534 \\ 
-       \cellcolor{gray!15} \textsf{ B } & 0.833 & 0.763 & 0.539 \\ 
-       \cellcolor{gray!15} \textsf{ C } & \cellcolor{gray!15} 0.863 & \cellcolor{gray!15} 0.799 & \cellcolor{gray!15} 0.629 \\ 
-       \hline
-    \end{tabular}
-    \caption{Summary metrics on the 216 document hidden test set for each of the three submitted Ensembles. All applicable metrics are macro-averaged when necessary. Higher is better.}
-    \label{tab:EnsembleTestSummaryMetrics1}
-\end{table}
-
-\begin{table}
-\centering
     \begin{tabular}{|c|c|c|c|c|}
         \hline
+        \textsf{ Ensemble } & \textsf{ MA-MAE } & \textsf{ ROC-AUC } & \textsf{ $R^2$ } & \\
+        \hline
+       \cellcolor{gray!15} \textsf{ A } & 0.837 & 0.776 & 0.534 & \\ 
+       \cellcolor{gray!15} \textsf{ B } & 0.833 & 0.763 & 0.539 & \\ 
+       \cellcolor{gray!15} \textsf{ C } & \cellcolor{gray!15} 0.863 & \cellcolor{gray!15} 0.799 & \cellcolor{gray!15} 0.629 & \\ 
+       \hline
         \textsf{ Ensemble } & \textsf{ Precision } & \textsf{ Recall } & \textsf{ F1-Score } & \textsf{ Accuracy } \\
         \hline
        \cellcolor{gray!15} \textsf{ A } & 0.671 & 0.662 & 0.664 & 0.685 \\ 
@@ -431,13 +411,13 @@ precision, recall, f-measure and accuracy of the ensembles.
         \hline
     \end{tabular}
     \caption{Summary metrics on the 216 document hidden test set for each of the three submitted Ensembles. All applicable metrics are macro-averaged when necessary. Higher is better.}
-    \label{tab:EnsembleTestSummaryMetrics2}
+    \label{tab:EnsembleTestSummaryMetrics}
 \end{table}
 
 
 
 The results of running our three submitted ensembles on the
-216-record test set are shown in Tables \ref{tab:EnsembleTestConfusionMatrix}---\ref{tab:EnsembleTestSummaryMetrics2}.
+216-record test set are shown in Table ~\ref{tab:EnsembleTestConfusionMatrix}.
 Table \ref{tab:EnsembleTestConfusionMatrix} shows the confusion
 matrices of the three ensembles on the test set.
 
@@ -474,10 +454,9 @@ in this)!
 
 Table \ref{tab:EnsembleTestMetrics} shows precision, recall
 and \textsf{MAE} for each valence class for each ensemble.
-Table \ref{tab:EnsembleTestSummaryMetrics1} shows the overall
-\textsf{MA-MAE}, \textsf{ROC-AUC} and \textsf{$R^2$} metrics for each
-ensemble, while Table \ref{tab:EnsembleTestSummaryMetrics2} summarizes
-precision, recall, f1-score and accuracy.
+Table \ref{tab:EnsembleTestSummaryMetrics} shows the overall
+\textsf{MA-MAE}, \textsf{ROC-AUC}, precision, recall, f1-score and accuracy and \textsf{$R^2$} metrics for each
+ensemble.
 
 As seen from Table \ref{tab:EnsembleTestMetrics}, \textsf{Ensemble C}
 wound up being the top scorer among our submissions.  

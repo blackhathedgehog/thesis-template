@@ -1,18 +1,23 @@
 \chapter{Class Association Rules}\label{sec:assoc-rules} 
  
  We decided to see if we could discover
- some clear dependencies between the features present in,
- potentially small, subsets
- of patients, and the value of their \textsf{Valence}. To test this,
- we engaged in the process of mining our feature data 
+ some clear dependencies between the features present in
+ (potentially small) subsets
+ of patients, and the value of their \textsf{Valence}. To test this, we engaged in the mining of our feature data 
  for Class Association Rules.
+ 
+ \section{Data Preparation}
  
  We constructed a subset of binary and categorical features found in the data.
  These primarily included the original features, medication and cumulative
  features, and a small handful of features retreived from other sources.
- With these features, we concentrated on discovery of class association rules
+ With these, we concentrated on discovery of class association rules
  of the form:
+ 
+ \begin{figure}[H]
  $$ F_1,F_2,\ldots, F_k\longrightarrow \mathsf{Valence},$$
+ \caption{Antecedent and Consequent of a Class Association Rule}
+ \end{figure}
 
 \noindent where $F_1,\ldots, F_k$ are conditions on the binary/categorical features. Table \ref{tab:AR}
 shows the parameters for our Class Association Rule search; we pruned away all rules that
@@ -24,10 +29,12 @@ did not satisfy them.
 %%% also dropped memory by a large constant factor because i used Numpy arrays to hold the values which have a lot less overhead than traditional Python lists and sets - and we would have hundreds of thousands of nodes 
 %% DONE
 
+\section{Mining}
+
 We used an existing Python implementation \cite{python-fp-growth} of the \textsf{FP-Growth} \footnote{
 Since the original Python implementation is not actively maintained, SentiMetrix has a private fork of the repository.
-SentiMetrix's API tweaks allow the emission of only Class Association Rules, rather than all Association Rules,
- support for aggressive filtering of redundant rules while mining and utilizes Numpy arrays rather than Python lists for more compact memory allocation and faster cache coherence \cite{numpy}. The overall improvements result in a modest reduction of memory, and a 33\% reduction in run-time. In addition, considering only Class Association Rules reduces the problem size by multiple orders of magnitude. This is significant, because even with these improvements mining higher $k \in \{4, 5\}$ took days to complete. 
+SentiMetrix's API tweaks allow the emission of only Class Association Rules, rather than all Association Rules;
+ support for aggressive filtering of redundant rules while mining; and utilizes Numpy arrays rather than Python lists for more compact memory allocation and faster cache coherence \cite{numpy}. The overall improvements result in a modest reduction of memory, and a 33\% reduction in run-time. In addition, considering only Class Association Rules reduces the problem size by multiple orders of magnitude. This is significant, because even with these improvements mining higher $k \in \{4, 5\}$ took days to complete. 
  } \cite{fpgrowth} 
 algorithm to perform an exhaustive search for Class Association Rules with
 $k \in \{1,2,3,4,5\}$.  For larger values of $k$ ($k = 6\ldots 9$) we used
@@ -40,6 +47,7 @@ $C5$ \cite{c5,c45}, which is non-exhaustive.
     \textsf{Parameter} & \textsf{Value} \\
     \hline
     Minimal Support  &  20 records\\ 
+    \hline
     Minimal Confidence & 0.6 \\
     Maximal Inverse Confidence & 0.4\\
     Maximal Negative Confidence& 0.4\\
@@ -49,13 +57,6 @@ $C5$ \cite{c5,c45}, which is non-exhaustive.
     \label{tab:AR}
 \end{table} 
  
- %% TO SKYLAR: insert a couple of sentences about chi-square pruning here.
- %%% i believe this was DONE yesterday
- %%% TODO: cite CMAR... also i suppose we should be using the author's name here?
-
-%% TO SKYLAR: some of this might migrate to the next section. Think about it.
- 
- 
   The discovered rules went through a rigorous pruning procedure. In addition
   to pruning away all discovered Class Association Rules (CARs) that did not
   pass the minimum standards shown in Table \ref{tab:AR}, we also conducted
@@ -63,10 +64,12 @@ $C5$ \cite{c5,c45}, which is non-exhaustive.
   for a more detailed explanation of the $\chi^2$ tests conducted). All CARs
   that did not pass the $\chi^2$ test at the significance level of
   $p=0.05$ were also eliminated from consideration. Essentially, failing
-  the $\chi^2$ test meant that there are significant reasons to believe that 
-  the CAR is a by-product of individual frequencies of the features it contained,
+  the $\chi^2$ test meant that there were significant reasons to believe that 
+  the CAR was a by-product of individual frequencies of the features it contained,
   rather than an actual meaningful relationship between these features and
   the \textsf{Valence} variable.
+  
+  \section{Pruning}
   
 Finally, we performed a \textit{Coverage Test} as proposed by Li et al \cite{cmar}. The purpose of the \textsf{Coverage Test} is to reduce the set of CARs to the ones that most accurately describe our data while avoiding excessive duplication. First, we sorted all of our generated CARs by confidence, support and $\chi^2$ score from best to worst. Starting with the first rule, all documents with features in the antecedent of the rule were marked. Then, we advanced onto the second round and marked all documents with features in the antecedent of that rule. The process was repeated until each input record was covered. After a single document has been marked five times, we removed it from future consideration. If a rule did not ``cover"" any considered documents, we discarded the rule. Once all documents have been marked five times, we discarded all remaining rules. For more information, see \ref{alg:coveragecheck}.
  
@@ -109,33 +112,32 @@ $observation\_counts \gets$ \Array{\Rank{$observations$}} \;
  of the Association Rules we mined during this process are presented in Table \ref{tab:ARexamples}. The first two rules were found by the \textsf{FP-Growth}
  process, and the third by \textsf{C5}.
  
- \begin{table}
+\begin{table}
      \centering
      \begin{tabular}{|l|l|c|c|c|}
     \hline
-    \textsf{Antecedent}& \textsf{Valence} & \textsf{Support}& \textsf{Confidence}&
+    \textsf{Antecedent}& \textsf{Valence} & \textsf{Support}& \textsf{Conf.} &
     \textsf{Neg. Conf.}\\
     \hline
-    \texttt{patient is an inpatient} and  &    &     &   & \\
-    \texttt{currently undergoing}& \textsf{SEVERE} & 22 & 21/22 (95.45\%)& 18.25\%\\
-    $\ \ \ \ \ $ \texttt{ addiction treatment} & & & & \\
+    \small{\texttt{patient is an inpatient} and}  &    &     &   & \\
+    \small{\texttt{currently undergoing}} & \textsf{SEVERE} & 22 & 21/22 & 18.25\%\\
+    $\ \ \ \ \ $ \small{\texttt{ addiction treatment}} & & & (95.5\%) & \\
     \hline
-    \texttt{patient NOT taking Aplenzin} and &   & & & \\
-    \texttt{has no history of drug abuse} and & \textsf{MODERATE} & 25 & 20/25 (80\%) & 22.06\%\\
-    \texttt{suffers from OCD} & & & & \\
+    \small{\texttt{patient suffers from OCD} and}  &   & & & \\
+    \small{\texttt{has no history of drug abuse}} & \textsf{MOD.} & 25 & 20/25 & 22.06\%\\
+    \small{\texttt{and NOT taking Aplenzin}} & & & (80\%)  & \\
     \hline
-    \texttt{patient is NOT inpatient} and  & & & & \\
-    \texttt{does not drink alcohol} and  & & & & \\
-    \texttt{is NOT taking Allernaze} and  & & & & \\
-    \texttt{is NOT taking Levothroid} and  & & & & \\
-    \texttt{is NOT taking Cultivate} and & \textsf{MILD} & 73 & 67/73 (92\%)& 38.37\%\\
-    \texttt{is NOT taking Abilify} and  & & & & \\
-    \texttt{does not suffer from OCD} and  & & & & \\
-    \texttt{has no history of violence} and & & & & \\
-    \texttt{suffers from depression} & & & & \\
+    \small{\texttt{patient is NOT inpatient} and}  & & & & \\
+    \small{\texttt{does not drink alcohol} and}  & & & & \\
+    \small{\texttt{is NOT taking Allernaze} and}  & & & & \\
+    \small{\texttt{is NOT taking Levothroid} and}  & & & & \\
+    \small{\texttt{is NOT taking Cultivate} and} & \textsf{MILD} & 73 & 67/73 & 38.37\%\\
+    \small{\texttt{is NOT taking Abilify} and}  & & & (92\%) & \\
+    \small{\texttt{does not suffer from OCD} and}  & & & & \\
+    \small{\texttt{has no history of violence}} & & & & \\
+    \small{\texttt{and suffers from depression}} & & & & \\
     \hline
      \end{tabular}
      \caption{Examples of discovered Association Rules.}
      \label{tab:ARexamples}
  \end{table}
- 

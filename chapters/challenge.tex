@@ -16,7 +16,7 @@ As shown in Table \ref{tab:data1}, a total of 649 records were released,  broken
 a test set of 216 files with no ground truth --- the latter released two days before
 the submissions were due. The initial release of the 433 patient records was broken into two categories: a suggested training set of 325 files, and 108 files
 called \textsf{annotated\_by\_1}. Since the contest organizers discouraged us from using the records from the \textsf{annotated\_by\_1} set as training set data, we focused 
-most of our efforts on the 325 record training set.
+most of our efforts on the 325-record training set.
 
 Each record, originally stored in a single XML file, represented the information from the
 initial psychiatric consultation of a single patient. For each record in the training set the challenge organizers supplied the ground truth
@@ -50,7 +50,7 @@ mental health, and family history captured in the provided data.
     \hline
     \textsf{Value} & \textsf{Meaning}\\
     \hline
-    $0$  & \textsf{ABSENT}\\
+    $0$  & \textsf{NONE}\\
     $1$  & \textsf{MILD}\\
     $2$  & \textsf{MODERATE}\\
     $3$  & \textsf{SEVERE}\\
@@ -61,8 +61,7 @@ mental health, and family history captured in the provided data.
 \end{table}
 
 The  XML files provided by the challenge organizers contained both structured data, which documented
-demographic information, mental health history, education, employment, financial status, family history of mental health, medical history, prescription and recreational drug use and a few other categories of information; and unstructured, free-form textual data, which documented self-reported symptoms and attending psychiatrists' notes on the patient and their condition. The data was in its raw, originally recorded form, and contained numerous typos, a lot of missing attributes, inconsistent use of abbreviations, and freeform text. The data was 
-also anonymized.
+demographic information, mental health history, education, employment, financial status, family history of mental health, medical history, prescription and recreational drug use, and a few other categories of information; along with unstructured, free-form textual data, which documented self-reported symptoms and attending psychiatrists' notes on the patient and their condition. The data was in its raw, originally recorded form, and contained numerous typos, missing attributes, inconsistent use of abbreviations, and freeform text. The data was also anonymized.
 
 Figure \ref{fig:sampleRecord} shows a \textit{notional (not real) record} created by us to illustrate the nature
 of the data --- it contains no
@@ -74,30 +73,27 @@ can give the reader an idea of the type of information that the teams had access
 \begin{tabular}{|l|}
 \hline
 \texttt{RAW DATA}\\
-     \\
 \texttt{    Name: John Doe}\\
-\\    
   \texttt{  Age: 42}\\
-\\
 \texttt{    Sex: Male}\\
-\\    
+\\
     \texttt{Referred by Emergency Services}
 \\    
 \texttt{    Has difficulty remembering if he has taken prescription drugs.}\\ \texttt{Accidental overdose.}
 \\    
-\texttt{    Referral Notes: Patient exhibits short-term memory loss - blood tests}\\
-\texttt{reveals mixed alcohol with
+\texttt{    Referral Notes: Patient exhibits short-term memory loss}\\
+\texttt{Mixed alcohol with
     prescription. Stayed overnight.}\\
 \texttt{Found bruises on shoulders - possibly from falling.}\\
 \\   
   \texttt{  DEPRESSION: YES}
   \\
-\texttt{OCD: No}
+  \texttt{OCD: No}
 \\
 \texttt{    PANIC: Yes}
 \\    
 \texttt{    Prescriptions:}\\
-\texttt{         Advil (3 times a day)}\\
+    \texttt{ Advil (3 times a day)}\\
 \\         
 \texttt{    Formulation:}
 \\
@@ -124,61 +120,50 @@ were deemed by our team to be free-form text.
 
 %%% Moving the TEXT fields into a separate table.
 
-\begin{table}[]
+\begin{table}
+{\small
     \centering
-    \begin{tabular}{|l|c|}
+    \begin{tabular}{|l|c|c|c|}
     \hline
-    \textsf{Type of feature} & \textsf{Number of features}  \\
+    \textsf{Feature Type} & \textsf{\# features} & \textsf{Feature Type} & \textsf{\# of features}  \\
     \hline
-    \textsf{All features} &       102      \\ 
+    \textsf{All features} &       102    & &   \\ 
     \hline
-    \textsf{Demographic information} & 3  \\
-    \textsf{Harming Others Or Self} & 4 \\
-    \textsf{Symptoms of Mental Health Issues} & 18 \\ %%% PTSD, Psychosis, Eating Disoders, Depression, etc %%%
-    \textsf{Drug, Caffeine and Alcohol Use} & 5 \\
-    \textsf{Family History} & 4 \\
-    \textsf{Symptom Denial} & 8 \\
-    \textsf{Independence of Daily Activities} & 9 \\
-    \textsf{Marital Status and Abuse} & 3 \\
-    \textsf{Employment and Finances} & 4 \\
-    \textsf{Owns Firearms} & 1 \\
-    \textsf{Legal History} & 1 \\
-    \textsf{If Underage, Legal Guardian} & 2 \\
-    \textsf{Military History} & 2 \\
-    \textsf{Appearance} & 14 \\
-    \textsf{Mental Health} & 18 \\
-    \textsf{Physical Health} & 6 \\
+    \textsf{Demographic information} & 3 & \textsf{Family History} & 4 \\
+    \textsf{Harming Others Or Self} & 4 & \textsf{Symptom Denial} & 8 \\
+    \textsf{Mental Health Symptoms} & 18 & \textsf{Owns Firearms} & 1 \\ 
+    \textsf{Drug, Caffeine and Alcohol Use} & 5 & \textsf{Legal History} & 1 \\
+    \textsf{Independence of Daily Activities} & 9 & \textsf{Appearance} & 14 \\
+    \textsf{Marital Status and Abuse} & 3 & \textsf{Military History} & 2 \\
+    \textsf{Employment and Finances} & 4 & \textsf{Mental Health} & 18 \\
+    \textsf{If Underage, Legal Guardian} & 2 & \textsf{Physical Health} & 6 \\
     \hline
 
     \end{tabular}
     \caption{Breakdown of features in the original N-GRID 2016 challenge Track 2 dataset by category.}
     \label{tab:data2}
-    \end{table}
+}
+\end{table}
   
-  \begin{table}[]
+\begin{table}
+    {\small
     \centering
-    \begin{tabular}{|c|}  
+    \begin{tabular}{|c|c|}  
     \hline
-    \textsf{Free-form Entries} \\
+    \multicolumn{2}{|c|}{\textsf{Free-form Entries}} \\
     \hline
-    \textsf{Chief Complaint (Patient's Own Words)}  \\
-    \textsf{History of Present Illness and Precipitating Events}  \\
-    \textsf{Previous Treatments}  \\
-    \textsf{Prior Medication Side-effects} \\
-    \textsf{Current Medication} \\
-    \textsf{Childhood History}  \\ %%% like how and where they grew up %%%
-    \textsf{Interpersonal Concerns} \\ %%% recent death in the family, etc %%%
-    \textsf{Education}  \\
-    \textsf{Family Living Situation}  \\
-    \textsf{Protective Factors}  \\
-    \textsf{Risk Factors}  \\
-    \textsf{Actions Taken}  \\
-    \textsf{Formulation}  \\
-    \textsf{Level of Care} \\
+    \textsf{Childhood History} & \textsf{History of Present Illness and Precipitating Events}  \\
+    \textsf{Previous Treatments} & \textsf{Prior Medication Side-effects} \\
+    \textsf{Current Medication} & \textsf{Chief Complaint (Patient's Own Words)}  \\ %%% like how and where they grew up %%%
+    \textsf{Interpersonal Concerns} & \textsf{Education}  \\
+    \textsf{Family Living Situation} & \textsf{Protective Factors}  \\
+    \textsf{Risk Factors} & \textsf{Actions Taken}  \\
+    \textsf{Formulation} & \textsf{Level of Care} \\
     \hline
     \end{tabular}
     \caption{List of free-form text fields found in the original data for Track 2 of the N-GRID 2016 challenge.}
     \label{tab:textdata}
+    }
 \end{table}
 
 
@@ -187,7 +172,7 @@ vector $\mathbf{p} = (p_1,\ldots, p_n)$, the \textsf{MAE} of the prediction is c
 $$ MAE(\mathbf{p},\mathbf{v}) = \frac{1}{n}\sum_{i=1}^{n}| p_i - v_i|$$
 
 The \textsf{MAE} was altered by the challenge organizers so that the
-score was in the range of [0, 1], where 1 indicated a perfect score. The new \textsf{MA-MAE}, \textsf{Macro-Averaged Mean Absolute Error}, measure was computed
+score was in the range of [0, 1], where 1 indicated a perfect score. The new \textsf{MA-MAE} (\textsf{Macro-Averaged Mean Absolute Error}) measure was computed
 by splitting the set of records into four categories (one per ground truth \textsf{Valence} value), computing the \textsf{MAE} for each of the four subsets independently, and combining
 the computed \textsf{MAE}s into a weighted sum. The normalizing factors
 for each of the component \textsf{MAE} values are the highest possible errors that
@@ -198,14 +183,14 @@ To make the computed value correspond to the
 \textit{higher is better} intuition, the computed weighted sum was subtracted from $1$.
 The formula for computing the N-GRID Challenge version of \textsf{MAE} is:
 
-
+\begin{figure}[H]
 $$ MA\_MAE(\mathbf{p},\mathbf{v}) = 1 - 
     \frac{(\frac{MAE(\mathbf{P0}, \mathbf{V0})}{3} + 
      \frac{MAE(\mathbf{P1}, \mathbf{V1})}{2} + 
      \frac{MAE(\mathbf{P2}, \mathbf{V2})}{2} + 
      \frac{MAE(\mathbf{P3}, \mathbf{V3})}{3})}{4} $$
+ \caption{Formula for computing Macro-Averaged Mean Average Error (MA-MAE)}
+ \end{figure}
 
 
-Every team participating in the challenge was allowed to submit up to three final guesses. Each guess
-was essentially a vector of predicted valences for each case history 
-from the provided \textit{test set}.
+Every team participating in the challenge was allowed to submit up to three final guesses. Each guess was an XML file containing a single value which was the predicted valence for the specified clinical record from the provided \textit{test set}.

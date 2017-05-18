@@ -11,7 +11,7 @@ initial patient evaluation records provided to us with a multitude of features
 from diverse sources. Almost all of our feature enhancement efforts 
 contributed non-trivial amounts of features to the final feature set. In addition
 to traditional features used for medical data analysis, such as diagnosis signals and sentiment, we have added novel categories of features: cumulative scores, commonality
-features, and medication use features, that proved important.
+features, and medication use features, that proved important. In particular, commonality features were significant both in terms of surviving through our rigorous feature selection processes, as well as greatly compacting the search space for association rule mining. 
 
 \item \textbf{Use of Class Association Rules as features.} Class Association Rules
 are often used by themselves to classify underlying data. In \CREATE\ we ``stacked"
@@ -31,7 +31,9 @@ $\chi^2$, mutual information gain, ANOVA $F-value$). Separation of our
 data into these data views allowed us to better train our classifiers:
 the winning ensemble of six classifiers used four out of seven data views.
 The fact that some of the classifiers in the ensemble were trained
-on disjoint sets of features helped prevent overfit in the ensemble.
+on disjoint sets of features helped prevent overfit in the ensemble, because while
+a single classifier may be biased with a certain data view, the collection
+of different data views would be less likely to be.
 
 \item \textbf{Adaptations of classifiers.} We adapted two classifiers
 to better work with the data. The \textsf{Random Forest regressor with classification
@@ -39,7 +41,7 @@ inference} adaptation was made specifically to account for the nature
 of the target \textsf{Valence} class attribute and resulted in improved
 performance of the Random Forest classifier. This regressor was featured
 in one of the three of our final submissions.  The 
-\textsf{SVM-Initialized Adaboost} by far outperformed all individual
+\textsf{SVM-Initialized AdaBoost} by far outperformed all individual
 classifiers, and featured prominently in our winning ensemble.
 
 
@@ -60,7 +62,7 @@ the ensembles.
 
 %%%%%%%%%%%%%%%%
 
-\paragraph{Future Work} \textsf{Word2Vec} and other emerging text embedding NLP strategies have gained a large amount of notariety since the release of TensorFlow. Although Google's \textsf{GoogleNews} vectors worked well, utilizing PubMed's massive database of medical text would be a more domain-aware embedding strategy and training our own \textsf{PubMedWordVectors} would likely increase the amount of topic coherency. A second area of improvement is using of deep learning algorithms such as \textsf{LSTMs} from TensorFlow in an attempt to find convoluted, non-linear feature interactions. 
+\paragraph{Future Work} \textsf{Word2Vec} and other emerging text embedding NLP strategies have gained a large amount of notariety since the release of TensorFlow. Although Google's \textsf{GoogleNews} vectors worked surprisingly well despite its apparent non-domain applicability \footnote{for more information, see Section \ref{sec:word2vec-for-textual-info}}, utilizing PubMed's massive database of medical text would be a more domain-aware embedding strategy and training our own \textsf{PubMedWordVectors} would likely increase the amount of topic coherency. A second area of improvement is using of deep learning algorithms such as \textsf{LSTMs} from TensorFlow \cite{tensorflow} in an attempt to find convoluted, non-linear feature interactions. Since our work on th e N-GRID competition, we have since implemented custom embedding strategies modeled after Word2Vec. If we were to repeat this competition, we would likely attempt to pursue a strategy merging PubMed with Word2Vec to create medical vectors similar to Med2Vec \footnote{for more information, see Section \ref{sec:med2vec}} \cite{med2vec}.
 
 Finally, the CREATE framework currently exists purely offline and is driven by a command line interface. Developing a more user-friendly and automated pipeline would allow SentiMetrix to more easily extend the applicability of the framework to a larger domain of medical records
 analysis, as well as to any data analytical tasks that involve large combined structured data and textual data feature sets.

@@ -1,23 +1,23 @@
 \chapter{Feature Engineering}\label{sec:features}
 
-To analyze the provided data, first we had to transform the original XML data into a tabular, textual format. Each XML file was structured so that it contained all the patient informaiton in a single CDATA block, along with a single tag describing the Valence. Manual examination of several XML files revealed the underlying structure of the patient records (see Figure \ref{fig:sampleRecord}).  
-We have identified portions of the patient record that we elected
+To analyze the provided data, first we had to transform the original XML data into a tabular, textual format. Each XML file was structured so that it contained all the patient information in a single CDATA block, along with a single tag describing the Valence. Manual examination of several XML files revealed the underlying structure of the patient records (see Figure \ref{fig:sampleRecord}).  
+We have previously identified portions of the patient record that we elected
 to represent as free-form text features (see Table \ref{tab:textdata}). 
 These were primarily the restatements of  symptoms experienced
 by the patients recorded from
 their own words, plus notes and observations of the psychiatrists conducting the
-evaluation of the patients.  Most other content from XML files 
+evaluations of the patients.  Most other content from the XML files 
 are represented as key-value pairs, with both keys and values relatively straightforward
 to determine and extract. During the extraction process, we were able to reduce the 102
 features (identifiable in the XML files as individual prompts) to 86 features, which
 we term the ``original" N-GRID dataset features.
 
- The parser's output 
+The parser's output 
  was a CSV file with each row containing information from a single case 
  history (ie, XML file) and each column containing information about a single feature: textual or
  structured. The initial breakdown of features is described in Table \ref{tab:data2}.  Not every
- XML document had values for all the extracted features; in fact, some features were
- present only in a handful of records, and other features were often omitted from records. Another data quality issue worth noting is the relative frequency of typos (which could have come either from the process of digitization of the records, or from the initial medical records themselves). Regular expressions were used to reduce the amount of error in boolean and categorical entries. Some examples include catching different ways to say \textsf{No}: \textsf{N}, \textsf{Missing} or  \textsf{Not}. Other expressions simplified synonymous medical codes or shorthand in categorical features, such as \textsf{ld} for a \textsf{learning disability}. For free-form text, no typo detection or conjoined word detection was used. 
+ XML document had values for all of the extracted features; in fact, some features were
+ present only in a handful of records, and other features were often omitted from records. Another data quality issue worth noting is the relative frequency of typos (which could have originated either from the process of digitization of the records, or from the initial medical records themselves). Regular expressions were used to reduce the amount of error in boolean and categorical entries. Some examples include catching different ways to say \textsf{No}: \textsf{N}, \textsf{Missing} or  \textsf{Not}. Other expressions simplified synonymous medical codes or shorthand in categorical features, such as \textsf{ld} for a \textsf{learning disability}. For free-form text, no typo detection or conjoined word detection was used. 
  
 
 We have then proceeded to enhance the original N-GRID dataset with a wide range
@@ -28,9 +28,9 @@ enhancement efforts.
  \centering
  \begin{tabular}{|l|l|c|}
     \hline
-    \textsf{Approach}  & \textsf{Explanation} & $\#$ \textsf{New Features}  \\
+    \textsf{Approach}  & \textsf{Explanation} & $\#$  \\
     \hline
-      \textsf{Original (Munged) Features}& Features taken from original data & 86 \\
+      \textsf{Original (Munged) Features}& Original clinical record entries & 102 \\
 \hline
       \textsf{Cumulative Scores}& Aggregations of like features & 62 \\ 
       \textsf{Medications} & Individual medications taken by patients & 47 \\ %%% it was 374 unique names, 47 columns  
@@ -44,7 +44,7 @@ enhancement efforts.
       \textsf{LIWC} & Topic detection and POS counts & 93 \\ 
       \textsf{Commonality of Patient} & A measure of how typical a patient is & 5 \\
       \hline
-      \textsf{TOTAL} & & 9912\\
+      \textsf{TOTAL} & & 9977\\
       \hline
  \end{tabular}
  \caption{A list of approaches to enhancing the feature set for the N-GRID Challenge (Track 2) dataset.}
@@ -52,10 +52,10 @@ enhancement efforts.
 \end{table}
  
  
- \paragraph{Cumulative Scores}  Our initial investigation of the original 
+ \section{Cumulative Scores}  Our initial investigation of the original 
  features extracted from the raw data unveiled groups of related features, typically
  with ``yes"/``no" values, where each individual feature was rarely set to ``yes" and no relationship with \textsf{Valence} appeared to exist. Moreover,
- the overall number of such features set to ``yes" in a single patient case history seemed to be in some relationship with \textsf{Valence}.  In such cases, we added a new feature, a
+ the overall number of such features set to ``yes" in a single patient case history seemed to be in some relationship with \textsf{Valence}.  In such cases, we added a new feature: a
  \textsf{cumulative score} of ``yes" values in a group of features, to the dataset.
  
  For example, the original features contained a relatively rich arsenal of 
@@ -65,7 +65,7 @@ enhancement efforts.
  groups of variables: number of psychiatric review conditions deemed positive for the patient, number of ``abnormal" items from the mental status exam, number of activities
  the patient does not perform independently, and more.
  
- The reasoning behind adding such features to the dataset was straightforward: we saw features which appeared to carry important information, but which, due to relative lack of positive/abnormal/out-of-ordinary values could not solely by themselves contribute to the learning of \textsf{Valence}. By creating cumulative count features, we represented the quantitative effects: case histories with more positive/abnormal responses in those feature columns received higher counts. This removed some of the sparsity of the dataset. 
+ The reasoning behind adding such features to the dataset was straightforward: we saw features which appeared to carry important information, but which, due to relative lack of positive/abnormal/out-of-ordinary values, could not individually contribute to the learning of \textsf{Valence}. By creating cumulative count features, we represented the quantitative effects: case histories with more positive/abnormal responses in those feature columns received higher counts. This removed some of the sparsity of the dataset. 
  
  
 %An additional category of cumulative features was a set of \textsf{typical score}
@@ -78,17 +78,17 @@ enhancement efforts.
 %binary features: \textsf{typical51, typical67, typical80, typical90, typical95}.
 %Each feature was set to 1 if the percentage of features set to ``typical'' values were 51\% ormore %for \textsf{typical51}, 67\% or more for \textsf{typical67} and so on.
  
- \paragraph{Extracting Medications}  
+ \section{Extracting Medications}  
  To capitalize on the possibility of using medications in predicting \textsf{Valence},
  we: (i)  manually created a list of 47 medications deemed relevant for
-     patient conditions, complete with alternate spellings and abbreviations where applicable, (ii) developed a \textsf{Medication Extractor} that analyzed the input data and produced the list of medications mentioned in it, and (iii)
-     created a dataset of medication mentions with 47 columns corresponding to the medications our \textsf{Medication Extractor} tool was tracking.     
+     patient conditions, complete with alternate spellings and abbreviations where applicable; (ii) developed a \textsf{Medication Extractor} which analyzed the input data and produced a list of all the medications listed within it; and (iii)
+     created a dataset of medication mentions with 47 columns corresponding to each of the medications our \textsf{Medication Extractor} tool was tracking.     
 
-  
- \paragraph{Emotion Features} SentiMetrix's SentEmotion is a web service,
+  %% 
+ \section{Emotion Features} SentiMetrix's SentEmotion is a web service,
  developed as part of the COPTADS project \cite{coptads,coptads-book} (see also Section \ref{sec:related}) that extracts the intensity of emotions such as anger, fear, depression, anxiety, stress, etc. from freeform text. In addition to labeling the overall sentiment of a text fragment
 \cite{subrahmanian2008ava} and individual emotions expressed in the
- text (anger,  fear, depression, etc),  the system outputs a confidence value, which expresses
+ text (anger,  fear, depression, etc),  the system outputs a confidence value which expresses
  the level of confidence the system has in the presence of the emotion.
  We ran all textual information for each of the records through SentEmotion and
  added 49 new mental health-related features.
@@ -109,17 +109,17 @@ enhancement efforts.
  
  %% STRIKEOUT
  % For the purposes of the N-GRID Shared Task challenge, we used only the final level of classification as features: . Our rationale was that many of the signals were already annotated by an expert, such as the patient appearing fearful or crying. Rather than risk duplicating features, we fed the free-form text, such as patient history and personal description, as a single document into the COPTADs system. We then added each document's confidence value as a feature. 
-\paragraph{Simple Representations of Textual Information}
+\section{Simple Representations of Textual Information}
  At our initial examination of the provided data, we identified a number of features
  whose contents constituted free-form text. We considered using the free-form text from each of the features as a separate input into any text analysis procedures we were employing.
- However, at the end, we decided to concatenate the contents of all free-form features into a single free-form text feature, and conduct all text analysis on it. This resulted in the richest possible text being processed for each patient record. 
+ However, in the end, we decided to concatenate the contents of all free-form features into a single free-form text feature, and conduct all text analysis on it. This resulted in the richest possible text being processed for each of our various patient records. 
  
- We investigated a number of way to represent textual data in our dataset. The first, more straightforward approach we took resulted in the following steps,
- which are a part of our the SentiMetrix Common Pipeline framework for data processing and
- data ingestion.
+We investigated a number of different ways to represent textual data in our dataset. The first and most straightforward approach we took was a part of the SentiMetrix Common Pipeline framework for data processing and data ingestion. The steps are as follows: 
+ 
+ %%     \item Removal of dates and integers from the dataset to be placed into \textsf{SMXDATE} and \textsf{SMXNUM} features
  
  \begin{itemize}
-     \item Removal of dates and integers from dataset into \textsf{SMXDATE} and \textsf{SMXNUM} features
+     \item Removal of dates and integers from the dataset into \textsf{SMXDATE} and \textsf{SMXNUM} features
      \item Stopword removal using the suggested english stopword lists in NLTK \cite{nltk} and Scikit-Learn \cite{scikit-learn}
      \item Stemming using the Snowball Stemmer \cite{snowball}
      
@@ -128,14 +128,14 @@ enhancement efforts.
 \end{itemize}
 
  
- \paragraph{Word2Vec for Textual Information} Our second approach used
+ \section{Word2Vec for Textual Information} \label{sec:word2vec-for-textual-info} Our second approach used
  \textsf{Word2Vec} 
  methodology\footnote{https://code.google.com/p/word2vec/} \cite{word2vec} introduced
  recently by Google.
 to represent each word found in each freeform text as a vector of 300 features.
 We used Google's own collection of Word2Vec vectors trained on the Google News
 corpus by Google. Despite N-GRID data containing a lot of
-specialized technical terms from psychiatric domain, and proper names such as
+specialized technical terms from the psychiatric domain, and proper names such as
 names of medications, 96.8\% of tokenized text contained in the N-GRID training set
 was also found in the Google's \textsf{Word2Vec} dataset with a coverage of 78.4\% of unique words. Examples of
 words not covered are typos such as \textsf{``weopons"}, \textsf{``ibuprofin"} or \textsf{``bipolaar"}; conjoined words such as \textsf{"employment.He"}; dates such as \textsf{"8/17/86"}; and medical jargon such as an exact dosage for a patient.
@@ -146,24 +146,24 @@ and computed the mean vector. This is the Word2Vec
 equivalent of the traditional Bag of Words model, and acknowledged as a naive baseline to construct a
 \textsf{ParagraphVector} by Mikolov and Le \cite{doc2vec}.  This procedure added 300 features to our dataset. We used gensim to load the binary Word2Vec word-to-vector file \cite{gensim}. 
  
- \paragraph{cTAKES Features} As mentioned in Section \ref{sec:related}, \textsf{Apache cTAKES} is a framework for extracting a variety of information from medical records.
+ \section{cTAKES Features} As mentioned in Section \ref{sec:related}, \textsf{Apache cTAKES} is a framework for extracting a variety of information from medical records.
  \textsf{cTAKES} looks for terminology related to medical symptoms, mentions
  of medications, body parts, procedures, diseases, disorders, and a few other
  categories of information.  For each patient record, we ran the concatenated free-form text
  extracted from the record through \textsf{cTAKES} to collect these signals.
  
 
- \paragraph{LIWC Features}
+ \section{LIWC Features}
   \textsf{LIWC}, Linguistic Inquiry and Word Count  \cite{liwc}, is a linguistic computerized text analysis tool similar to SentEmotion. 
- \textsf{LIWC} produces 93 signals, which include various low-level Parts-of-Speech analysis such as the number/frequency of pronouns, 
- semantic features such as if the document has a positive or negative tone, and basic topic-analysis such as detecting if the document focuses on home, money, leisure, the past, or friends.
+ \textsf{LIWC} produces 93 signals, which include various low-level Parts-of-Speech analysis such as the number/frequency of pronouns; 
+ semantic features such as if the document has a positive or negative tone; and basic topic-analysis such as detecting if the document focuses on home, money, leisure, the past, or friends.
  We have run the free-form text extracted from each record, collected all
  \textsf{LIWC} features, and added them to our dataset.
  
  %%% TO ALEX: honest answer: we use it as a stop gap for PoS summarization since we haven't really done much PoS historically at SMX. In the future i'm going to push a bit stronger for PoS instead of just naive unigram stems. 
  %%% it also includes the `topics` such as `liwc_risk`, `liwc_focuspast`, `liwc_space`, `liwc_work`, `liwc_leisure`
- 
- \paragraph{Common Value Features}
+
+ \section{Common Value Features}
 \textsf{Common Value Features} are another form of a cumulative feature, but rather than summarizing logically related features, they summarizes features that individually have little explanatory power.
 For example most individual observations of a variety of patient behaviors
 were labeled with the code \textsf{"WNL"} which is interpreted as \textsf{"within normal limits"}.  In fact, \textit{most} patients had \textit{all} their observations
@@ -173,9 +173,8 @@ formed a very well-defined, \textit{but not very interesting} frequent itemset.
 %not be prescribed a random set of five medications than not. 
 These very frequent, but essentially benign itemsets give rise to a large number of 
 useless association rules during the rule generation process. Since an exhaustive
-mining process on our dataset is extremely slow for any $k$ greater than 4, these \textsf{very frequent itemsets} tended both contribute to consume
+mining process on our dataset is extremely slow for any $k$ greater than 4, these \textsf{very frequent itemsets} tended both to consume
 significant CPU resources while not producing any interesting results.
-
 
 To reduce the size of our market baskets, we created the concept of a \textsf{typical value}. We set up five separate "typicality" thresholds: 51\%, 62.5\%,
 75\%, 87.5\%, and 90\%.  Given a number $t$ from the list above, and given
@@ -183,13 +182,15 @@ a feature from our feature set,
 a specific value of the feature was called $t$-\textit{typical} if more
 than $t$ percent of all records in the training set contained this value.
 
+\par{
 We aggregated the notion of $t$-\textit{typicality} by introducing
 five \textit{common value features} into the dataset: one per typicality
 threshold. The common values feature for threshold $t$ was set to the total number of other features in the given record which contained $t$-\textit{typical} values. See the algorithm described in Algorithm ~\ref{alg:commonvaluealg} for more detail.
-These new features allowed us to quickly see whether a specific patient
-evaluation record yielded rare, atypical, unusual values for its features.
+These new features allowed us to quickly see whether a specific patient evaluation record yielded rare, atypical, or unusual values for its features.
+}
 
-\begin{algorithm}[H] \label{alg:commonvaluealg}
+
+\begin{algorithm}[h] 
  \SetKwData{RowRank}{RowRank}
  \SetKwData{Array}{Array}
  \SetKwInOut{Output}{output}
@@ -217,7 +218,8 @@ evaluation record yielded rare, atypical, unusual values for its features.
         }
     }
  }
- \emph{normalize output so it is in $0..1$} \\ 
+ \emph{normalize output so it is in 0\ldots1} \\ 
  $common\_values$ /= $num\_common\_values$ \\
  \caption{How to compute our 5 Common Value Features}
+ \label{alg:commonvaluealg}
 \end{algorithm}

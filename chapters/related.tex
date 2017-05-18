@@ -6,11 +6,22 @@ Machine Learning is the name of the set of tasks given to computers with the goa
 
 Classification is the act of associating an \textit{observation} with a pattern \cite{liu2007web}. Formally, an observation -- typically represented as a collection of text, audiovisual or numerical \textit{features} -- is assigned one or more labels. A Classification Algorithm will attempt to associate sub-patterns in the observations with patterns. For example, if a data scientist were tasked with classifying days as \textit{hot} or \textit{cold}, the number of customers at a local ice cream store could be used as a feature. In general, we'd expect the store to be more busy on hot days, rather than cold days. However, this is not a guarantee -- for example, a particularly large birthday party could form an outlier, or perhaps ice cream stores are just more popular on Fridays, even though Fridays are no more likely to be warmer than any other day. 
 
-An excellent classifier would be able to identify hot days from cold ones with high \textit{precision} as well as miss very few obviously hot days (known as \textit{recall}). In most tasks, data scientists must balance between Recall and Precision. In some domains, recall is extremely important. For example, in the medical domain it is much less costly to have false positives while detecting cancer than it is to miss a patient entirely. On the other hand, some tasks prefer the opposite. A camera that detects if someone has run a red light would prefer to be precise rather than flag innocent drivers.
+An excellent classifier would be able to identify hot days from cold ones with high \textit{precision} as well as miss very few obviously hot days (known as \textit{recall}). In most tasks, data scientists must balance between both Recall and Precision. In some domains, recall is extremely important. For example, in the medical domain it is much preferred to have false positives while detecting cancer than it is to overlook a real threat at the risk of a patient's health.  On the other hand, some tasks prefer the opposite. A camera that detects if someone has run a red light would prefer to be precise rather than flag innocent drivers.
 
+%% 
 \subsection{Supervised Classification}
 
-Supervised Classification is focused on identifying membership to one of a set of \textit{predetermined} patterns, typically called a \textit{label} \cite{liu2007web}. Supervised learning is called supervised because it is assigned a label by a human that is designed upon before the algorithm is trained. The \textit{training} step will be given each label, and the label must be trustworthy and consistent. Supervised Classification problems, therefore, tend to be somewhat expensive to collect data for. Every data point must be labeled and audited by a human, or perhaps several in order to form a clear consensus.
+Supervised Classification is focused on identifying membership to one of a set of \textit{predetermined} patterns, typically called a \textit{label} \cite{liu2007web}. Supervised learning is called supervised because it is assigned a label by a human that is decided upon before the algorithm is trained. The \textit{training} step will be given each label, and the label must be trustworthy and consistent. Supervised Classification problems, therefore, tend to be somewhat expensive to collect data for. Every data point must be labeled and audited by a human, or perhaps several in order to form a clear consensus.
+
+\paragraph{Naive Bayes}
+
+\paragraph{AdaBoost}
+
+\paragraph{Decision Trees}
+
+\paragraph{Random Forest}
+
+\paragraph{Support Vector Machines}
 
 \subsection{Unsupervised Classification}
 
@@ -38,16 +49,18 @@ AutoEncoders were originally designed as compression strategies for video and te
 }
 %% Should it be "0...1" or are two periods standard?
 \par{
-Consider an grayscale image matrix $I$, that is \textsf{1000x1000} pixels. To simplify the problem, instead of a traditional RGB channel, each pixel is a float value in the range of $0..1$ indicating the grayscale of that pixel \footnote{which can be trivially converted to the RGB colorspace at render time}. Thus, the image contains 1 million floats if we were to represent it as a naive, dense matrix. Suppose our goal is to achieve 50\% compression. We would want to create two functions: $f_c$ and $f_d$. $f_c$ accepts $I$ and outputs a compressed version $C$ which is sent to the client, which $f_d$, then decodes and outputs $I'$. Our algorithm is trained to minimize the \textit{loss} which might be defined as the difference between $I$ and $I'$. Our black-box AutoEncoder would thus look something like this:
+Consider an grayscale image matrix $I$, that is \textsf{1000x1000} pixels. To simplify the problem, instead of a traditional RGB channel, each pixel is a float value in the range of 0\ldots1 indicating the grayscale of that pixel \footnote{which can be trivially converted to the RGB colorspace at render time}. Thus, the image contains 1 million floats if we were to represent it as a naive, dense matrix. Suppose our goal is to achieve 50\% compression. We would want to create two functions: $f_c$ and $f_d$. $f_c$ accepts $I$ and outputs a compressed version $C$ which is sent to the client, which $f_d$, then decodes and outputs $I'$. Our algorithm is trained to minimize the \textit{loss} which might be defined as the difference between $I$ and $I'$. Our black-box AutoEncoder would thus look something like this:
 }
 
+\begin{figure}
 \[f_c(I) => C \]
 \[ f_d(C) => I' \]
-\captionof{figure}{S.t. $(I' - I)^2$ is minimized}
+\caption{S.t. $(I' - I)^2$ is minimized}
+\end{figure}
 
 %% Caption for AutoEncoder
 \par{
-Intuitively, there is a trade-off in $|C|$ and the loss. That is, smaller, more-compressed matrices will generally result in a higher loss $I'$. In a typical system, AutoEncoders are \textit{stacked}. That is, we might have three successive compression functions, each emitting a compressed matrix, followed by three successive decompression functions. The exact implementations of the AutoEncoder is beyond the scope of this paper, but they generally rely on a Deep Neural Network \cite{}.
+Intuitively, there is a trade-off in $|C|$ and the loss. That is, smaller, more-compressed matrices will generally result in a higher loss $I'$. In a typical system, AutoEncoders are \textit{stacked}. That is, we might have three successive compression functions, each emitting a compressed matrix, followed by three successive decompression functions. The exact implementations of the AutoEncoder is beyond the scope of this paper, but they generally rely on a Deep Neural Network \cite{tensorflow}.
 }
 
 \subsection{Word2Vec}
@@ -70,19 +83,19 @@ Consider $w_t$ which is defined as a word $w$ at location $t$. $w_t$'s context $
 }
 
 
-\begin{figure}
-\[ C_t: [w_{t-N}, ..., w_{t-2}, w_{t-1}, w_{t+1}, w_{t+2}, ..., w_{t+N}] \]
+\begin{figure}[H]
+\[ C_t: [w_{t-N}, \ldots, w_{t-2}, w_{t-1}, w_{t+1}, w_{t+2}, \ldots, w_{t+N}] \]
 \caption{A Context $C_t$ is the Bag of Words representation of the \textit{window} centered at point $t$, with $w_t$ omitted}
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[H]
 \[ f(w_t) => V \]
 \[ g(V) => C_t' \]
 \caption{Skip-Gram: construct $f$ and $g$ such a word $w$ at location $t$ predicts its \textit{context} $C_t'$. The loss is the difference of $C_t'$ and its actual context $C_t$}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
 \[ f(C_t) => V \]
 \[ g(V) => w_t' \]
 \caption{CBOW: construct $f$ and $g$ such a context $C$ at location $t$ predicts \textit{word} $w_t'$. The loss is the difference of the predicted $w_t'$ and the actual word $w_t$}
@@ -92,7 +105,7 @@ Consider $w_t$ which is defined as a word $w$ at location $t$. $w_t$'s context $
 By itself, the \textit{skip-gram} and \textit{cbow} models do not seem to be useful. The key contribution of Word Vectors is understanding that unlike in an AutoEncoder where a human is consuming the final output $C'$, \textit{we can throw away $g$ and its output entirely!} Suppose we want to solve a second classification problem that has labels $L_t$. We can replace the original $g$ with a new $g'$ that accepts $V$ and predicts $L_t$! Thus, if we pre-compute a comprehensive look-up dictionary of words to $V$, we are able to greatly simplify the original dataset construction of multiple problems at the same time. 
 }
 
-\paragraph{Med2Vec} Building on top of Mikolov's Skip-Gram model, Choi et al. sought to create a deep learning document embedding strategy \cite{med2vec}. They had two datasets of 3 and 5 million documents with a combined total almost 30,000 medical codes that acted as a natural clustering. \textsf{Med2Vec} is constructed in a similar method as \textsf{Skip-Gram Word2Vec}, but treats sequential visits from the same patient as if they were sequence of words in a sentence. Compared to \textsf{Skip-Gram Word2Vec} and \textsf{GloVe}, \textsf{Med2Vec} achieves lower, better normalized Mutual Information Gain scores on Medication and Procedure, implying that it builds embeddings that are better clustered for those tasks \cite{GloVe}. While \textsf{SVD} of document text performed better than \textsf{Med2Vec}, \textsf{SVD} was demonstrated to have far lower interpretability \cite{svd}. 
+\paragraph{Med2Vec} \label{sec:med2vec} Building on top of Mikolov's Skip-Gram model, Choi et al. sought to create a deep learning document embedding strategy \cite{med2vec}. They had two datasets of 3 and 5 million documents with a combined total almost 30,000 medical codes that acted as a natural clustering. \textsf{Med2Vec} is constructed in a similar method as \textsf{Skip-Gram Word2Vec}, but treats sequential visits from the same patient as if they were sequence of words in a sentence. Compared to \textsf{Skip-Gram Word2Vec} and \textsf{GloVe}, \textsf{Med2Vec} achieves lower, better normalized Mutual Information Gain scores on Medication and Procedure, implying that it builds embeddings that are better clustered for those tasks \cite{GloVe}. While \textsf{SVD} of document text performed better than \textsf{Med2Vec}, \textsf{SVD} was demonstrated to have far lower interpretability \cite{svd}. 
 
 \section{Existing Medical Language Methodologies}
 
@@ -108,24 +121,15 @@ the Snowball stemmer for English\cite{snowball}.
 
 %% SKYLAR: EXPAND?
 \paragraph{SentEmotion} 
-The SentiMetrix team (consisting of the co-authors of this paper) became interested
-in this challenge due to prior work SentiMetrix has conducted in the
-domain of clinical diagnoses for mental health conditions \cite{coptads,coptads-book}.
-Founded in 2007, SentiMetrix is a data science and social analytics company
-offering a variety of solutions to address the “big data” needs of commercial companies and government agencies. 
-
-Through its work on past projects \cite{dickerson14,kagan15,darpa} SentiMetrix has built an array of technology-based solutions, focusing on the near real-time analysis of large quantities of complex data in multiple languages. Prior projects
-applied these solutions to data analytical challenges in the areas of national security, elections, marketing, and medicine.
-We built upon our prior work on detecting mental health disorders such as Depression, PTSD and TBI from patient notes\cite{coptads,coptads-book}. This system, known as COPTADs, is a text-based classification engine that was developed in cooperation with psychologists. Leading surveys had identified a set of signals that a victim of depression might have: for example, isloation from others. We previously built a classification engine on top of the Stanford Parser \cite{stanfordparser} to extract these signals, 
-and then a second layer to extract emotions such as anger or fear. The third layer generates a confidence value for each of the disorders that COPTADs is configured to recognize.
+Through its work on past projects \cite{dickerson14,kagan15,darpa} SentiMetrix has built an array of technology-based solutions, focusing on the near real-time analysis of large quantities of complex data in multiple languages. SentEmotion \cite{coptads,coptads-book} is a text-based classification engine developed jointly with psychologists that detects mental health disorders such as Depression, PTSD and TBI from patient notes. Leading surveys had identified a set of signals that a victim of depression might have: for example, isolation from others. We built a classification engine on top of the Stanford Parser \cite{stanfordparser} to extract these signals, and then a second layer to extract both emotions -- anger or fear -- and symptoms -- insomnia or agoraphobia. The final layer generates a confidence value for each of the disorders that COPTADs is configured to recognize. Clinical Text Analysis and Knowledge Extraction System \cite{ctakes} by Apache is an open-source NLP system that extracts a variety of mental illness signals, physical symptoms, and medication from text.
 
 %% TODO: cite apriori?
-\paragraph{Feature Selection using Association Rules} K. Rajeswari demonstrated the use of using \textsf{Apriori} rule mining in order to select features with high significance \cite{rajeswari}. First, the authors mined a set of rules with a small $k$ value. Then, they removed all features that did not appear in at least one rule. The third step was to re-run the \textsf{Apriori} but on a much larger $k$. Finally, when training the final classifier, they included only the features that were an antecedent in at least one rule. The higher $k$ value omits some useful association rules, but should take an order of magnitude less time to complete, due to the large reduction of $n$ candidate rules. The author noticed on a dataset attempting to classify the risk of heart disease that computation time was cut by a full two orders of magnitude with this procedure.
+\paragraph{Feature Selection using Association Rules} K. Rajeswari demonstrated the use of using \textsf{Apriori} rule mining in order to select features with high significance \cite{rajeswari}. First, the authors mined a set of rules with a small $k$ value. Then, they removed all features that did not appear in at least one rule. Next, they re-ran the \textsf{Apriori} but on a much larger $k$. Finally, when training the final classifier, they included only the features that were an antecedent in at least one rule. The higher $k$ value omits some useful association rules, but should take an order of magnitude less time to complete, due to the large reduction of $n$ candidate rules. The author noticed on a dataset attempting to classify the risk of heart disease that computation time was cut by a full two orders of magnitude with this procedure.
 
-\paragraph{Classification using Association Rules} B. Liu developed a technique on which to do Classification Based On Association Rules \cite{cba}. Liu's main contributions is the notion of a \textit{coverage check} in which rules are sorted in order of their predictive power -- confidence -- and rules that are subsumed by a more powerful rule are removed. At inference time, the first rule in which the antecedent is covered yields its corresponding class. Liu improves upon this work by raising the minimum coverage of the \textit{coverage check} to 5 subsuming rules, as well as a stronger notion of rules using chi-$x^2$ tests \cite{cmar}. 
+\paragraph{Classification using Association Rules} B. Liu developed a technique on which to do Classification Based On Association Rules \cite{cba}. Liu's main contributions is the notion of a \textit{coverage check} in which rules are sorted in order of their predictive power -- confidence -- and then rules that are subsumed by a more powerful rule are removed. At inference time, the first rule in which the antecedent is covered yields its corresponding class. Liu improves upon this work by raising the minimum coverage of the \textit{coverage check} to 5 subsuming rules, as well as a stronger notion of rules using chi-$x^2$ tests \cite{cmar}. 
 
 %%% TODO: expand this some more
-\paragraph{Other Work} Abbe \cite{abbe} describes different styles of psychiatric NLP and suggests four domains: observational studies, analysis of patient's thoughts and journals, medical records, and published literature. The NGRID challenge falls into the third category, whereas SentEmotion mostly focused on the second. Pestian \cite{pestian} created an NLP pipeline that could identify whether or not a suicide note was genuine using decision-tree-based classification rules along with AdaBoost and outperformed domain experts by reducing Type II errors by 30\%. Shiner \cite{shiner} processed 221 psychotherapy clinical notes to determine the quality of treatment that veterans were receiving. 
+\paragraph{Other Work} Abbe \cite{abbe} describes different styles of psychiatric NLP and suggests four domains: observational studies, analysis of patient's thoughts and journals, medical records, and published literature. The NGRID challenge falls into the third category, whereas SentEmotion mostly focused on the second. Pestian \cite{pestian} created an NLP pipeline that could identify whether or not a suicide note was genuine using decision-tree-based classification rules along with AdaBoost and outperformed domain experts by reducing Type II errors by 30\%.
 
-\section{Ensemble Construction} Constructing ensembles was a key step in winning both the N-GRID competition as well as others, such as Kaggle. However, constructing ensemble rules by hand can be time-consuming or miss optimal solutions. Cortes et al. describes an online machine-learning algorithm called \textsf{ESPBoost} that accepts hundreds of potential ``experts" and the correct label \cite{espboost}. \textsf{ESPBoost} uses coordinate descent to reduce the Hamming loss which finds a locally performant ensemble without enumerating all possibilities \cite{coordinate-descent,hamming-loss}. \textsf{ESPBoost} did best on large problems with a large number of experts.
+\section{Ensemble Construction} Constructing ensembles was a key step in winning both the N-GRID competition as well as others, such as Kaggle. However, constructing ensemble rules by hand can be time-consuming or miss optimal solutions. Cortes et al. describes an online machine-learning algorithm called \textsf{ESPBoost} that accepts hundreds of potential ``experts" and the correct label \cite{espboost}. Similar to many other machine learning algorithms, \textsf{ESPBoost} uses coordinate descent to reduce a loss function -- in this case, Hamming -- to find a local minima without enumerating all possibilities \cite{coordinate-descent,hamming-loss}. \textsf{ESPBoost} has been empirically found to work best on large problems with a large number of experts.
  
