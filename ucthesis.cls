@@ -473,13 +473,7 @@ ALL RIGHTS RESERVED
 {\abstractname}\par
 \@title\par
 \vspace{.1in}
-% \@author\par
-\author[smx,cp]{Skylar Eglowski} \par
-\author[cp]{Alex Dekhtyar}
-\author[smx]{Vadim Kagan}
-\author[smx]{Andrew Stevens} \\
-\author[umd,smx]{V.S. Subrahmanian} 
-\author[smx]{Joshua Terrell} \par
+\@author\par
 
 % \address[cp]{Department of Computer Science and Software Engineering, California Polytechnic State University, San Luis Obispo} \\
 % \address[smx]{SentiMetrix, Inc} \\

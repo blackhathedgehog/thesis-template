@@ -1,6 +1,6 @@
 \chapter{Feature Engineering}\label{sec:features}
 
-To analyze the provided data, first we had to transform the original XML data into a tabular, textual format. Each XML file was structured so that it contained all the patient information in a single CDATA block, along with a single tag describing the Valence. Manual examination of several XML files revealed the underlying structure of the patient records (see Figure \ref{fig:sampleRecord}).  
+To analyze the provided data, first we had to transform the original XML data into a tabular, textual format. Each XML file was structured so that it contained all the patient information in a single CDATA block, along with a single tag describing the Valence. Manual examination of several XML files revealed the underlying structure of the patient records (see the synthetic example in Figure \ref{fig:sampleRecord}).  
 We have previously identified portions of the patient record that we elected
 to represent as free-form text features (see Table \ref{tab:textdata}). 
 These were primarily the restatements of  symptoms experienced
@@ -8,18 +8,16 @@ by the patients recorded from
 their own words, plus notes and observations of the psychiatrists conducting the
 evaluations of the patients.  Most other content from the XML files 
 are represented as key-value pairs, with both keys and values relatively straightforward
-to determine and extract. During the extraction process, we were able to reduce the 102
+to determine and extract. 
+
+To transform this XML file into a pipeline-ingestable format, a serious of regular expressions were applied searching for text starting with a special \textit{key}. Pure textual data was assigned its own feature column, but would eventually be concatenated into one feature called \textsf{text\_ALL}. Ordinal numbers were simply used as is. Categorical values were handled on a case-by-case basis. Often, there was a limited number of potential values -- either text or numerical -- and we would map each categorical value to its own boolean feature, doing our best to map inconsistent abbreviation usage to the correct values. Missing data was represented with the value \textsf{Not a Number}. The final result of the extraction process, reduces the 102
 features (identifiable in the XML files as individual prompts) to 86 features, which
 we term the ``original" N-GRID dataset features.
 
-The parser's output 
- was a CSV file with each row containing information from a single case 
- history (ie, XML file) and each column containing information about a single feature: textual or
- structured. The initial breakdown of features is described in Table \ref{tab:data2}.  Not every
+The initial breakdown of features is described in Table \ref{tab:data2}.  As mentioned above, not every
  XML document had values for all of the extracted features; in fact, some features were
  present only in a handful of records, and other features were often omitted from records. Another data quality issue worth noting is the relative frequency of typos (which could have originated either from the process of digitization of the records, or from the initial medical records themselves). Regular expressions were used to reduce the amount of error in boolean and categorical entries. Some examples include catching different ways to say \textsf{No}: \textsf{N}, \textsf{Missing} or  \textsf{Not}. Other expressions simplified synonymous medical codes or shorthand in categorical features, such as \textsf{ld} for a \textsf{learning disability}. For free-form text, no typo detection or conjoined word detection was used. 
  
-
 We have then proceeded to enhance the original N-GRID dataset with a wide range
 of additional features. Below we discuss the nine different ways in which we augmented our feature set. Table \ref{tab:features} contains the summary of our feature
 enhancement efforts.

@@ -10,7 +10,7 @@
  
  We constructed a subset of binary and categorical features found in the data.
  These primarily included the original features, medication and cumulative
- features, and a small handful of features retreived from other sources.
+ features along with boolean features from LIWC, SentEmotion, cTakes.
  With these, we concentrated on discovery of class association rules
  of the form:
  
@@ -22,12 +22,6 @@
 \noindent where $F_1,\ldots, F_k$ are conditions on the binary/categorical features. Table \ref{tab:AR}
 shows the parameters for our Class Association Rule search; we pruned away all rules that
 did not satisfy them.
-
-%%% ALEX: Do we want to talk about the improvements we made to the python-fp-growth implementation?
-%%% i made a few tweaks to handle CARs much better (rather than generating all ARs and then eliminating all non-CARs)
-%%% performance increase of 50%, which is significant because higher k's (k=4, k=5) took days to complete
-%%% also dropped memory by a large constant factor because i used Numpy arrays to hold the values which have a lot less overhead than traditional Python lists and sets - and we would have hundreds of thousands of nodes 
-%% DONE
 
 \section{Mining}
 

@@ -1,19 +1,19 @@
 \chapter{Conclusion and Future Work}\label{sec:conclusion}
 
-
 The \CREATE\ framework we built for Track 2 of the CEGS N-GRID 2016 Shared Task in Clinical Natural Language Processing introduces a number of novel features in the
 field of automated analysis of medical records. The core novel
 features of \CREATE\ that proved to be crucial to our success included:
 
-\begin{itemize}
-\item \textbf{Enhanced features.} An aggressive approach to enhancing the
+\section{Contributions}
+
+\pargraph{Enhanced features.} An aggressive approach to enhancing the
 initial patient evaluation records provided to us with a multitude of features
 from diverse sources. Almost all of our feature enhancement efforts 
 contributed non-trivial amounts of features to the final feature set. In addition
 to traditional features used for medical data analysis, such as diagnosis signals and sentiment, we have added novel categories of features: cumulative scores, commonality
-features, and medication use features, that proved important. In particular, commonality features were significant both in terms of surviving through our rigorous feature selection processes, as well as greatly compacting the search space for association rule mining. 
+features, and medication-use features, which were demonstrated to be statistically significant. In particular, commonality features were significant both in terms of surviving through our rigorous feature selection processes, as well as greatly compacting the search space for association rule mining. 
 
-\item \textbf{Use of Class Association Rules as features.} Class Association Rules
+\paragraph{Use of Class Association Rules as features.} Class Association Rules
 are often used by themselves to classify underlying data. In \CREATE\ we ``stacked"
 the learning processes by using a set of CARs with complete five-fold\footnote{Meaning
 that each record in the training set was covered by at least five discovered
@@ -21,7 +21,7 @@ Class Association Rules.} coverage of our training set as \textit{additional fea
 in our dataset, and using both the CARs-only and combined feature sets in
 subsequent classification and regression tasks.
 
-\item \textbf{Feature Pruning and Data View construction.} Our aggressive
+\paragraph{Feature Pruning and Data View construction.} Our aggressive
 battery of feature pruning tests eliminated redundant or useless features.
 In addition, rather than using the full set of features for each classification
 tasks, we attempted to zero in on useful subsets of the features, either by
@@ -33,19 +33,18 @@ the winning ensemble of six classifiers used four out of seven data views.
 The fact that some of the classifiers in the ensemble were trained
 on disjoint sets of features helped prevent overfit in the ensemble, because while
 a single classifier may be biased with a certain data view, the collection
-of different data views would be less likely to be.
+of different data views would be less likely to be. 
 
-\item \textbf{Adaptations of classifiers.} We adapted two classifiers
+\paragraph{Adaptations of classifiers.} We adapted two classifiers
 to better work with the data. The \textsf{Random Forest regressor with classification
 inference} adaptation was made specifically to account for the nature
 of the target \textsf{Valence} class attribute and resulted in improved
 performance of the Random Forest classifier. This regressor was featured
 in one of the three of our final submissions.  The 
-\textsf{SVM-Initialized AdaBoost} by far outperformed all individual
-classifiers, and featured prominently in our winning ensemble.
+\textsf{SVM-Initialized AdaBoost} outperformed every other individual
+classifiers-data view in almost every metric and featured prominently in our winning ensemble.
 
-
-\item \textbf{Tuned Round Voting scheme for ensembles of classifiers.} While
+\paragraph{Tuned Round Voting scheme for ensembles of classifiers.} While
 our classifier ensembles were formed in a simple way by giving each classifier
 an equal vote in each outcome, the \textit{tuned round} voting scheme for
 deciding the results of the vote, \textit{which was featured in all five
@@ -58,11 +57,17 @@ by this method were different than the default values in almost all
 cases, which, by virtue of the method, improved the final accuracy of
 the ensembles.
 
-\end{itemize}
-
 %%%%%%%%%%%%%%%%
 
-\paragraph{Future Work} \textsf{Word2Vec} and other emerging text embedding NLP strategies have gained a large amount of notariety since the release of TensorFlow. Although Google's \textsf{GoogleNews} vectors worked surprisingly well despite its apparent non-domain applicability \footnote{for more information, see Section \ref{sec:word2vec-for-textual-info}}, utilizing PubMed's massive database of medical text would be a more domain-aware embedding strategy and training our own \textsf{PubMedWordVectors} would likely increase the amount of topic coherency. A second area of improvement is using of deep learning algorithms such as \textsf{LSTMs} from TensorFlow \cite{tensorflow} in an attempt to find convoluted, non-linear feature interactions. Since our work on th e N-GRID competition, we have since implemented custom embedding strategies modeled after Word2Vec. If we were to repeat this competition, we would likely attempt to pursue a strategy merging PubMed with Word2Vec to create medical vectors similar to Med2Vec \footnote{for more information, see Section \ref{sec:med2vec}} \cite{med2vec}.
+\paragraph{Limitations and Challenges} One key limitation of \CREATE is its tightly coupled functionality as a part of the structure of the challenge itself. While no \textit{individual} component was tightly coupled to the domain, the entire pipeline itself was trained on a very specific data format. This makes it somewhat less extensible compared to other NLP systems such as Stanford Parser \cite{stanfordparser}. Second, both the training and test sets were small; 325 and 216 documents, respectively. Therefore, it is possible that our ensemble took first place only by chance. Nonetheless, we believe that the contributions outlined in the previous section provide lift when applied in the correct domain. In particular, Class Association Rules provide strong story-telling capabilities when results need to be interpreted by a professional.
 
-Finally, the CREATE framework currently exists purely offline and is driven by a command line interface. Developing a more user-friendly and automated pipeline would allow SentiMetrix to more easily extend the applicability of the framework to a larger domain of medical records
+\section{Future Work}
+
+\paragraph{Improve Embedding} \textsf{Word2Vec} and other emerging text embedding NLP strategies have gained a large amount of notariety since the release of TensorFlow. Although Google's \textsf{GoogleNews} vectors worked surprisingly well despite its apparent non-domain applicability \footnote{for more information, see Section \ref{sec:word2vec-for-textual-info}}, utilizing PubMed's massive database of medical text would be a more domain-aware embedding strategy and training our own \textsf{PubMedWordVectors} would likely increase the amount of topic coherency. 
+
+\paragraph{Better Application of Deep Learning Classifiers} A second area of improvement is using of deep learning algorithms such as \textsf{LSTMs} from TensorFlow \cite{tensorflow} in an attempt to find convoluted, non-linear feature interactions. Since our work on th e N-GRID competition, we have since implemented custom embedding strategies modeled after Word2Vec. If we were to repeat this competition, we would likely attempt to pursue a strategy merging PubMed with Word2Vec to create medical vectors similar to Med2Vec \footnote{for more information, see Section \ref{sec:med2vec}} \cite{med2vec}. As a part of the COPTADs project \cite{coptads}, we have since spent some time looking at Word2Vec skip-gram training strategies \cite{word2vec} to model clinical records in lower dimensionality space over time.
+
+\paragraph{More Efficient Ensemble Construction} We are currently expending effort comparing online learning strategies using \textsf{ESPBoost} \cite{espboost} compared to \textsf{Tuned Round Voting}. Preliminary analysis leads us to believe that \textsf{ESPBoost} works best for datasets in the millions of documents where comprehensive brute force analysis is intractable.
+
+\paragraph{Usability} Finally, the CREATE framework currently exists purely offline and is driven by a command line interface. Developing a more user-friendly and automated pipeline would allow SentiMetrix to more easily extend the applicability of the framework to a larger domain of medical records
 analysis, as well as to any data analytical tasks that involve large combined structured data and textual data feature sets.

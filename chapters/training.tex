@@ -1,7 +1,5 @@
 \chapter{Classifier Training and Adaptations}\label{sec:ml}
 
-%% 1. List all classifiers we used (including their origin - scikit-learn and such
-
 \begin{table}[t]
 {\small
     \centering
@@ -70,14 +68,14 @@ techniques. They are described below.
 Our two novel adaptations of existing classifiers are discussed below. 
 
 \subsection{Random Forest Regression with Classification Inference (RF-reg-clf)}
-Random Forest is a powerful yet forgiving algorithm that can perform a modest amount of feature selection due to its subsampling \cite{breiman01, ho95}. In \textsf{scikit-learn}, there are both regression and classification modes of Random Forest \cite{scikit-learn}. As Valence can be treated as both a class or an ordinal value, we tried both methods. Since regression provides additional insight for the classifier, it often had slightly higher scores. However, regression biases the kernel into averaging around the mean of all the labels. The result of this is \textsf{MILD} Valences might be moved to be slightly more \textsf{MODERATE} and vice-versa. When it comes to building the ensemble, this small amount of drift can result in large classification errors if it causes the ensemble's vote to cross a rounding threshold. Our adaptation was to train the Random Forest on the regression version of the problem. Then, during inference, round the inferred value to the nearest Valence. 
+Random Forest is a powerful yet forgiving algorithm that can perform a modest amount of feature selection due to its subsampling \cite{breiman01, ho95}. In \textsf{scikit-learn}, there are both regression and classification modes of Random Forest \cite{scikit-learn}. As Valence can be treated as both a class or an ordinal value, we tried both methods. Since regression provides additional insight for the classifier, it often had slightly higher scores. However, in practice regression at inference time biases the kernels right in between \textsf{MILD} (eg, 1.4) and \textsf{MODERATE} (eg, 1.6). The result of this is \textsf{MILD} Valences might be moved to be slightly more \textsf{MODERATE} and vice-versa. When it comes to building the ensemble, this small amount of drift can result in large classification errors if it causes the ensemble's vote to cross a rounding threshold. Our adaptation was to train the Random Forest on the regression version of the problem. Then, during inference, round the inferred value to the nearest Valence. 
 
 \subsection{SVM Initialized AdaBoost (SVM-Init-ada)}
 The novel technique we used on this project is the initialization of AdaBoost learning
 process with SVM (\textsf{SVM-Init-AdaBoost} classifier in our parlance). AdaBoost trains
 a sequence of  estimators one after another \cite{adaboost}. After each iteration, the training set is be reweighed; documents that were just misclassified will have their weight increased, while documents that were just classified correctly will have their weight decreased. This forces the next classifier to correct the mistakes its predecessor made. While AdaBoost is traditionally done a fast and weaker classifier such as Naive Bayes, any kernel can be used. 
 
-In other project, SentiMetrix has had success by introducing a single round of a slow and strong classifier as a seed for AdaBoost \cite{darpa}. As Support Vector Machines was one of our better classifiers and provides a meaningful decision function, it works well as the bootstrapping classifier and provides an anchor for the weak classifiers. We modified the AdaBoost process as follows:
+In other project, SentiMetrix has had success by introducing a single round of a slow and strong classifier as a seed for AdaBoost \cite{darpa}. Recall that AdaBoost generally relies on an ensemble of weak classifiers that only need to be slightly better than random to gradually converge. As Support Vector Machines was one of our better classifiers and provides a meaningful decision function that cleanly divides the problem space, it works well as an intitial \textit{bootstrapping} classifier to provide an anchor for the successive weak classifier to converge around. We modified the original AdaBoost process (see Section \ref{sec:adaboost}) as follows:
 
 \begin{enumerate}
     \item \textsf{Step 1:} Run Linear kernel SVM classifier on input data. 
@@ -85,14 +83,9 @@ In other project, SentiMetrix has had success by introducing a single round of a
     \item \textsf{Step 3\ldots52:} Run Na\"{i}ve Bayes classification 49 times, reweighing document weights after every iteration, and checking for convergence. Reaching convergence before 49 iterations will terminate the process early
 \end{enumerate}
 
-On the input N-GRID challenge data, linear kernel SVM produced better
-accuracy results than a single Na\"{i}ve Bayes run. This allowed our 
-modification of AdaBoost to start with a sufficiently accurate bootstrap.
-This additional accuracy gained on the first step has proven to be 
-a core factor in the overall accuracy of this classifier, as one
-of its runs wound up being the best individual classifier in our
-battery.
+On the input N-GRID challenge data, linear kernel SVM produced better accuracy results than a single Na\"{i}ve Bayes run. This allowed our modification of AdaBoost to start with a sufficiently accurate bootstrap. This additional accuracy gained on the first step has proven to be  a core factor in the overall accuracy of this classifier, as one of its runs wound up being the best individual classifier in our battery.
 
+One might point out that if 1 iteration of SVM is good, then wouldn't 50 iterations of SVM to be even better? First, there is a significant cost to training and hyper-parameterizing a Support Vector Machine, compared to Naive Bayes -- hours versus seconds. Second, the Support Vector Machine is inserted for ``free'' by a natural consequence of our process. Since we had already trained and hyper-parameterized a Support Vector Machine for each view, we only had to train the 49 successive iterations of Naive Bayes in order to build this model. Finally, such a process would be similar to that of the Gradient Boosted Decision Trees implemented in XGBoost \cite{xgboost}, which did not perform very well in our data sets. This was partially expected as XGBoost typically requires millions of observations to generalize well.
 
 \section{Data Views}
 
@@ -122,7 +115,7 @@ This view includes both numeric and categorical features that
 were present in the original dataset, as well as constructed
 using \textsf{cTAKES}, SentEmotion, and \textsf{LIWC} toolkits.}) as well
 as the best features that passed a specific test: $\chi^2$, ANOVA or Multiple
-Information Gain. We experimented briefly with top 100, 82 \footnote{82 was the fewest number of significant features found by all three statistical measures -- $chi^2$ in this case} and top 75 best features
+Information Gain. We experimented briefly with top 100, 82 \footnote{82 was the fewest number of significant features found by all three statistical measures -- which happened to be $chi^2$} and top 75 best features
 for each of the tests, but settled on top 50, as this provided better accuracy.
 
 As a result, at the end of the process we had a total of $22\times 7 = 154$

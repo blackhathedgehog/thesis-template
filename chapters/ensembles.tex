@@ -59,15 +59,13 @@ and rounds it to the nearest \textsf{Valence} value.
 
 Our most complicated voting scheme acts like another hyper-parametrization search.
 
-The general idea behind this method is fairly straightforward, although the implementation
-does require some explanation.  The \textit{simple round voting} scheme assumes
-that the average valence of $2.6$ (out of $3$) points to the class \textsf{Valence = SEVERE},
+The \textit{simple round voting} scheme assumes that the average valence of $2.6$ (out of $3$) points to the class \textsf{Valence = SEVERE},
 as $2.6$ is greater than the midpoint between the numeric \textsf{Valence} scores for
 \textsf{MODERATE} and \textsf{SEVERE} classes. However, \textsf{Valence} (despite
 how we choose to treat it on occasion) is \textbf{not} a continuous variable, but
 an ordinal one.  Therefore, $0.5$, $1.5$ and $2.5$ \textit{do not have to be} the threshold
 values separating the neighboring valence classes.  What should these values be?
-Well, we can treat this as yet another hyperparameter tuning problem, and find
+Well, we can treat this as yet another hyper-parameter tuning problem, and find
 such values of the three threshold parameters that optimize the \textsf{MA-MAE} score.
 
 For our experiments we used the following threshold sets, which give rise to
@@ -426,11 +424,12 @@ matrices in  Table \ref{tab:EnsembleTestConfusionMatrix}
 to those in Table \ref{tab:EnsembleTrainConfusionMatrix}
 (for the training set), that all three ensembles overall
 performed as expected and did not overfit the training
-set by much.  We note that all three ensembles
- excelled at \textit{not making huge mistakes}:
-they had 10, 11, and 7 data points (respectively) with classification
+set by much. Much of the ensemble's MA-MAE improvement was by avoiding misclassifying documents
+with an error of $2$ or more; 10, 11, and 7 data points (respectively) with classification
 error of $2$ or more. This compares with 7, 5, and 8 such
-data points misclassified on (somewhat larger) training set.
+data points misclassified on (somewhat larger) training set. 
+This is an expected behavior -- in order to misclassify a document with a larger error,
+many of an ensemble's constituent classifiers must make the same mistake.
 
 All three ensembles exhibited very similar performance
 on the 31 records with \textsf{Valence = NONE}.

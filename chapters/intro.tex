@@ -29,25 +29,25 @@ single pipeline we called \CREATE\ (Clinical REcords Analysis Technology Ensembl
 	\label{fig:arch}
 \end{figure} 
 
-The \CREATE\ framework is a machine-learning pipeline that includes several innovations. We start by taking the raw (noisy, cluttered) data provided to N-GRID challenge participants and use a data ingestion phase to ingest and clean it.
+The \CREATE\ framework is a machine-learning pipeline that includes several innovations that were developed over the course of project. We start by taking the raw (noisy, cluttered) data provided to N-GRID challenge participants and use a data ingestion phase to ingest and clean it.
 Second, we apply a host of sophisticated methods to extract a ``base'' set of  features for each clinical record from the ingested data. We expand this set of features
-via a variety of methods, adding  8198 new features to the original 86. 
+via a variety of methods, adding 9263 new features to the original 86. 
 Third, we apply association rule mining to learn approximately 345,000 association rules
 \cite{fpgrowth,c5}, and then trim them to a set of 628 predictive rules. Though association rules have been widely used in the literature for classification, we use them to generate 628 new features, one for each association rule.
-Fourth, with the new total of $9284+628=9912$ features we engage a set of 
+Fourth, with the new total of $86+9263+628=9977$ features we engage a set of 
 feature selection operations in order to eliminate useless features. 
 Fifth, we train a total of 22 classifiers, each on seven different subsets
 of features (data views). Of these, two are novel adaptations of existing Random Forest \cite{ho95,breiman01} and AdaBoost \cite{adaboost} classifiers. 
-All of these classifiers build on top of the association rule classifiers developed earlier,
+All of these classifiers utilize the association rule classifiers developed earlier,
 which is why we call them ``stackable'' in our framework. On our final step, 
 we train different ensemble classifiers consisting of the subsets of best 
 individual learners in order to improve the final accuracy of detection of
 patient condition severity. In both the fifth and sixth steps, we do extensive k-fold cross validation and move forward from there to make our final predictions.
 
-This is not the first time predictors have been stacked --- in the past we developed stacked regressors for predicting airline market share and demand \cite{an2016map} as well as predicting the number of hosts in a given enterprise that a malware will attack 
-\cite{kang2016ensemble}.
+% This is not the first time predictors have been stacked --- in the past we developed stacked regressors for predicting airline market share and demand \cite{an2016map} as well as predicting the number of hosts in a given enterprise that a malware will attack 
+% \cite{kang2016ensemble}.
 
-In addition, this is not the first time our team has worked with textual medical record classification. SentEmotion is a text-based classification engine that was developed in cooperation with psychologists. Leading surveys had identified a set of signals that a victim of depression might have: for example, isolation from others. SentEmotion signals comprised some of the many features that we utilized in our final solution for the challenge \cite{coptads}.
+% In addition, this is not the first time our team has worked with textual medical record classification. SentEmotion is a text-based classification engine that was developed in cooperation with psychologists. Leading surveys had identified a set of signals that a victim of depression might have: for example, isolation from others. SentEmotion signals comprised some of the many features that we utilized in our final solution for the challenge \cite{coptads}.
 
 This paper is organized as follows. In Section \ref{sec:related} we discuss prior work in this area.  Section
 \ref{sec:challenge} explains the details of Track 2 of the CEGS N-GRID 2016 Shared Task in Clinical Natural Language Processing (which we, for brevity, refer to as ``the N-GRID challenge"

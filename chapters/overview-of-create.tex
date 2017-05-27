@@ -5,19 +5,13 @@ We provide brief overviews of the individual components of \CREATE\  below.
 %Because the data ingestion phase is relatively straightforward (but tedious), we do not describe it %below. The remaining 5 components are:
 
 \begin{enumerate}
-\item \textsf{Data Ingestion} - a fairly straightforward, if tedious process
-of converting the XML data files provided to us into case $\times$ feature matrices.
-We limit our discussion of this step to what was presented in 
-Section \ref{sec:challenge}, when we discussed the provided dataset.
+\item \textsf{Data Ingestion} - convert the XML data files provided to us into case $\times$ feature matrices that are readily consumed by machine learning pipelines. We limit our discussion of this step to what was presented in Section \ref{sec:challenge}, when we discussed the provided dataset.
 
  \item \textsf{Feature Extraction} - described in Section \ref{sec:features}.  We started our work on predicting the \textsf{Valence} variable by careful
 extraction of existing features from the raw XML data provided to us by the  organizers.
-After starting with the features present verbatim (i.e.,
-as unique elements) in the released dataset (see Table \ref{tab:data2}) we defined several other features to generate
-a single overarching dataset.
+After starting with the features present verbatim (i.e., as unique elements) in the released dataset (see Table \ref{tab:data2}) we defined several other features to generate a single overarching dataset.
 
- \item \textsf{Development of Association Rule-based Features} - described in Section~\ref{sec:assoc-rules}. In this stage, we extracted a set of 345,373 Class Association Rules from the above dataset and then eliminated redundant ones to generate a total of 628 in all. For
- each retained Class Association Rule we included a binary feature into our dataset.
+ \item \textsf{Development of Association Rule-based Features} - described in Section~\ref{sec:assoc-rules}. In this stage, we extracted a set of 345,373 Class Association Rules from the above dataset and then eliminated redundant ones to generate a total of 628 in all. For each retained Class Association Rule we included a binary feature into our dataset.
  
  \item \textsf{Feature Selection} - described in Section \ref{sec:selection}. We next devised a set of tests to identify irrelevant features; a feature that failed all of the tests was eliminated.
  
