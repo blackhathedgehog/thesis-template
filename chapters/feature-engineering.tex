@@ -79,12 +79,12 @@ enhancement efforts.
  \section{Extracting Medications}  
  To capitalize on the possibility of using medications in predicting \textsf{Valence},
  we: (i)  manually created a list of 47 medications deemed relevant for
-     patient conditions, complete with alternate spellings and abbreviations where applicable; (ii) developed a \textsf{Medication Extractor} which analyzed the input data and produced a list of all the medications listed within it; and (iii)
+     patient conditions, complete with alternate spellings, brand names and abbreviations where applicable; (ii) developed a \textsf{Medication Extractor} which analyzed the input data and produced a list of all the medications listed within it; and (iii)
      created a dataset of medication mentions with 47 columns corresponding to each of the medications our \textsf{Medication Extractor} tool was tracking.     
 
   %% 
  \section{Emotion Features} SentiMetrix's SentEmotion is a web service,
- developed as part of the COPTADS project \cite{coptads,coptads-book} (see also Section \ref{sec:related}) that extracts the intensity of emotions such as anger, fear, depression, anxiety, stress, etc. from freeform text. In addition to labeling the overall sentiment of a text fragment
+ developed as part of the COPTADS project \cite{coptads-book,coptads} (see also Section \ref{sec:related}) that extracts the intensity of emotions such as anger, fear, depression, anxiety, stress, etc. from freeform text. In addition to labeling the overall sentiment of a text fragment
 \cite{subrahmanian2008ava} and individual emotions expressed in the
  text (anger,  fear, depression, etc),  the system outputs a confidence value which expresses
  the level of confidence the system has in the presence of the emotion.
@@ -117,22 +117,23 @@ We investigated a number of different ways to represent textual data in our data
  %%     \item Removal of dates and integers from the dataset to be placed into \textsf{SMXDATE} and \textsf{SMXNUM} features
  
  \begin{itemize}
-     \item Removal of dates and integers from the dataset into \textsf{SMXDATE} and \textsf{SMXNUM} features
+     \item Replace dates with a special tag of \textsf{SMXDATE}
+     \item Replace integers with a special tag of \textsf{SMXNUM}
      \item Stopword removal using the suggested english stopword lists in NLTK \cite{nltk} and Scikit-Learn \cite{scikit-learn}
      \item Stemming using the Snowball Stemmer \cite{snowball}
      
-     \item Term-Frequency Inverse-Document Frequency \cite{tf-idf,ir-textbook} of unigram features for each surviving word stem/term
+     \item Term-Frequency Inverse-Document Frequency \cite{ir-textbook,tf-idf} of unigram features for each surviving word stem/term
      
 \end{itemize}
 
  
  \section{Word2Vec for Textual Information} \label{sec:word2vec-for-textual-info} Our second approach used
  \textsf{Word2Vec} 
- methodology\footnote{https://code.google.com/p/word2vec/} \cite{word2vec} introduced
+ methodology \cite{word2vec} introduced
  recently by Google.
 to represent each word found in each freeform text as a vector of 300 features.
 We used Google's own collection of Word2Vec vectors trained on the Google News
-corpus by Google. Despite N-GRID data containing a lot of
+corpus and provided by Google \footnote{https://code.google.com/p/word2vec/} . Despite N-GRID data containing many
 specialized technical terms from the psychiatric domain, and proper names such as
 names of medications, 96.8\% of tokenized text contained in the N-GRID training set
 was also found in the Google's \textsf{Word2Vec} dataset with a coverage of 78.4\% of unique words. Examples of
@@ -165,7 +166,7 @@ equivalent of the traditional Bag of Words model, and acknowledged as a naive ba
 \textsf{Common Value Features} are another form of a cumulative feature, but rather than summarizing logically related features, they summarizes features that individually have little explanatory power.
 For example most individual observations of a variety of patient behaviors
 were labeled with the code \textsf{"WNL"} which is interpreted as \textsf{"within normal limits"}.  In fact, \textit{most} patients had \textit{all} their observations
-set to \textsf{"WNL"}, so a group of seven-to-eight \textsf{"WNL"}-valued features
+set to \textsf{"WNL"}, so a group of \textsf{"WNL"}-valued features
 formed a very well-defined, \textit{but not very interesting} frequent itemset.
 %For example, for our 47 medications, it is significantly more frequent for a user to 
 %not be prescribed a random set of five medications than not. 
@@ -174,15 +175,15 @@ useless association rules during the rule generation process. Since an exhaustiv
 mining process on our dataset is extremely slow for any $k$ greater than 4, these \textsf{very frequent itemsets} tended both to consume
 significant CPU resources while not producing any interesting results.
 
-To reduce the size of our market baskets, we created the concept of a \textsf{typical value}. We set up five separate "typicality" thresholds: 51\%, 62.5\%,
+To reduce the size of our market baskets, we created the concept of a \textsf{typical value}. We set up five separate "commmonality" thresholds: 51\%, 62.5\%,
 75\%, 87.5\%, and 90\%.  Given a number $t$ from the list above, and given
 a feature from our feature set,
-a specific value of the feature was called $t$-\textit{typical} if more
+a specific value of the feature was called $t$-\textit{common} if more
 than $t$ percent of all records in the training set contained this value.
 
 \par{
-We aggregated the notion of $t$-\textit{typicality} by introducing
-five \textit{common value features} into the dataset: one per typicality
+We aggregated the notion of $t$-\textit{commonality} by introducing
+five \textit{common value features} into the dataset: one per commonality
 threshold. The common values feature for threshold $t$ was set to the total number of other features in the given record which contained $t$-\textit{typical} values. See the algorithm described in Algorithm ~\ref{alg:commonvaluealg} for more detail.
 These new features allowed us to quickly see whether a specific patient evaluation record yielded rare, atypical, or unusual values for its features.
 }

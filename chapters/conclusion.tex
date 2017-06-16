@@ -6,7 +6,7 @@ features of \CREATE\ that proved to be crucial to our success included:
 
 \section{Contributions}
 
-\pargraph{Enhanced features.} An aggressive approach to enhancing the
+\paragraph{Enhanced features.} An aggressive approach to enhancing the
 initial patient evaluation records provided to us with a multitude of features
 from diverse sources. Almost all of our feature enhancement efforts 
 contributed non-trivial amounts of features to the final feature set. In addition
@@ -21,8 +21,8 @@ Class Association Rules.} coverage of our training set as \textit{additional fea
 in our dataset, and using both the CARs-only and combined feature sets in
 subsequent classification and regression tasks.
 
-\paragraph{Feature Pruning and Data View construction.} Our aggressive
-battery of feature pruning tests eliminated redundant or useless features.
+\paragraph{Feature Pruning and Data View construction.} Our 
+battery of feature pruning tests eliminated a large amount of useless features.
 In addition, rather than using the full set of features for each classification
 tasks, we attempted to zero in on useful subsets of the features, either by
 feature type (all CAR features, all non-CAR features) or by the scores
@@ -61,13 +61,44 @@ the ensembles.
 
 \paragraph{Limitations and Challenges} One key limitation of \CREATE is its tightly coupled functionality as a part of the structure of the challenge itself. While no \textit{individual} component was tightly coupled to the domain, the entire pipeline itself was trained on a very specific data format. This makes it somewhat less extensible compared to other NLP systems such as Stanford Parser \cite{stanfordparser}. Second, both the training and test sets were small; 325 and 216 documents, respectively. Therefore, it is possible that our ensemble took first place only by chance. Nonetheless, we believe that the contributions outlined in the previous section provide lift when applied in the correct domain. In particular, Class Association Rules provide strong story-telling capabilities when results need to be interpreted by a professional.
 
+\paragraph{Computational Costs} Unfortunately, \CREATE has significant implementation and training costs that may limit its applicability compared to simpler models in budget constrained environments. While some labor costs are unavoidable -- such as text ingestion into feature matrices -- the training costs of all of different data views combined with all our different classifiers is high. Cross-validation and hyper-parameterization is also a time-consuming process, even if it can be computed in parallel. Complete Class Association Rule mining in particular was one of our slowest stages, and would get even worst with additional data. Recently, some tweaks to FP-Growth have been suggested that allow association rules to be mined on distributed GPUs, despite the sequential process of traditional FP-Growth \cite{7022712}. 
+
+In addition, the knowledge that we have gleaned from participation in this contest would inform us on which features to focus on in future clinical record analysis tasks. Table ~\ref{tab:costs} describes some of effect that was spent at each stage of the pipeline. The computational complexity of training most stages of the pipeline is $O(n * k)$ where $n$ is the number of documents and $k$ is the maximum of $|features|$ and $|documents|$. The critical path of our pipeline is mining as currently implemented is Class Association Rules.
+
+\begin{table} 
+\centering
+\begin{tabular}{|c|c|c|} 
+     \hline
+     Step & Computation Time & Critical Path \\
+     \hline
+     Text to Munged CSV & Seconds & -  \\
+     Feature Expansion & 5 Minutes & SentEmotion \\
+     (already existing tools) & & \\
+     WordVectors & 20 minutes & Loading Pre-trained Vectors  \\
+     Class Association Rules & Minutes & (up to k=3)  \\
+     Class Association Rules & Hours & (up to k=4)  \\
+     Class Association Rules & 3 Days & (up to k=5)  \\
+     C5.0 CARs & Minutes & (up to k=9)  \\
+     Feature Selection & Minutes & Mutual Information Gain \\
+     Classifier Training & 6 Hours & Linear SVM \\
+     Ensemble Creation & 8 Hours & - \\
+     \hline
+\end{tabular}
+\caption{Description of approximate computation times for various parts of the CREATE  pipeline}
+\label{tab:costs}
+\end{table}
+
+% Altogether, the complexity of the pipeline is roughly $O(n*k log n)$ where n is the number of document $k$ is the maximum of the number of documents and the number of features. 
+
+
+
 \section{Future Work}
 
-\paragraph{Improve Embedding} \textsf{Word2Vec} and other emerging text embedding NLP strategies have gained a large amount of notariety since the release of TensorFlow. Although Google's \textsf{GoogleNews} vectors worked surprisingly well despite its apparent non-domain applicability \footnote{for more information, see Section \ref{sec:word2vec-for-textual-info}}, utilizing PubMed's massive database of medical text would be a more domain-aware embedding strategy and training our own \textsf{PubMedWordVectors} would likely increase the amount of topic coherency. 
+\paragraph{Improve Embedding} \textsf{Word2Vec} and other emerging text embedding NLP strategies have gained a large amount of notoriety since the release of TensorFlow. Although Google's \textsf{GoogleNews} vectors worked surprisingly well despite its apparent non-domain applicability \footnote{for more information, see Section \ref{sec:word2vec-for-textual-info}}, utilizing PubMed's massive database of medical text would be a more domain-aware embedding strategy and training our own \textsf{PubMedWordVectors} would likely increase the amount of topic coherency. 
 
-\paragraph{Better Application of Deep Learning Classifiers} A second area of improvement is using of deep learning algorithms such as \textsf{LSTMs} from TensorFlow \cite{tensorflow} in an attempt to find convoluted, non-linear feature interactions. Since our work on th e N-GRID competition, we have since implemented custom embedding strategies modeled after Word2Vec. If we were to repeat this competition, we would likely attempt to pursue a strategy merging PubMed with Word2Vec to create medical vectors similar to Med2Vec \footnote{for more information, see Section \ref{sec:med2vec}} \cite{med2vec}. As a part of the COPTADs project \cite{coptads}, we have since spent some time looking at Word2Vec skip-gram training strategies \cite{word2vec} to model clinical records in lower dimensionality space over time.
+\paragraph{Better Application of Deep Learning Classifiers} A second area of improvement is using of deep learning algorithms such as \textsf{LSTMs} from TensorFlow \cite{tensorflow} in an attempt to find convoluted, non-linear feature interactions. Since our work on the N-GRID competition, we have since implemented custom embedding strategies modeled after Word2Vec. If we were to repeat this competition, we would likely attempt to pursue a strategy merging PubMed with Word2Vec to create medical vectors similar to Med2Vec \footnote{for more information, see Section \ref{sec:med2vec}} \cite{med2vec}. As a part of the COPTADs project \cite{coptads}, we have since spent some time looking at Word2Vec skip-gram training strategies \cite{word2vec} to model clinical records in lower dimensional space over time.
 
 \paragraph{More Efficient Ensemble Construction} We are currently expending effort comparing online learning strategies using \textsf{ESPBoost} \cite{espboost} compared to \textsf{Tuned Round Voting}. Preliminary analysis leads us to believe that \textsf{ESPBoost} works best for datasets in the millions of documents where comprehensive brute force analysis is intractable.
 
 \paragraph{Usability} Finally, the CREATE framework currently exists purely offline and is driven by a command line interface. Developing a more user-friendly and automated pipeline would allow SentiMetrix to more easily extend the applicability of the framework to a larger domain of medical records
-analysis, as well as to any data analytical tasks that involve large combined structured data and textual data feature sets.
+analysis, as well as to any data analysis tasks that involve large combined structured data and textual data feature sets.

@@ -57,15 +57,15 @@ $C5$ \cite{c5,c45}, which is non-exhaustive.
   a $\chi^2$ test of significance for each discovered CAR (see Section \ref{sec:selection}
   for a more detailed explanation of the $\chi^2$ tests conducted). All CARs
   that did not pass the $\chi^2$ test at the significance level of
-  $p=0.05$ were also eliminated from consideration. Essentially, failing
-  the $\chi^2$ test meant that there were significant reasons to believe that 
+  $p=0.05$ were also eliminated from consideration. Failing
+  the $\chi^2$ test implies that
   the CAR was a by-product of individual frequencies of the features it contained,
   rather than an actual meaningful relationship between these features and
   the \textsf{Valence} variable.
   
   \section{Pruning}
   
-Finally, we performed a \textit{Coverage Test} as proposed by Li et al \cite{cmar}. The purpose of the \textsf{Coverage Test} is to reduce the set of CARs to the ones that most accurately describe our data while avoiding excessive duplication. First, we sorted all of our generated CARs by confidence, support and $\chi^2$ score from best to worst. Starting with the first rule, all documents with features in the antecedent of the rule were marked. Then, we advanced onto the second round and marked all documents with features in the antecedent of that rule. The process was repeated until each input record was covered. After a single document has been marked five times, we removed it from future consideration. If a rule did not ``cover"" any considered documents, we discarded the rule. Once all documents have been marked five times, we discarded all remaining rules. For more information, see \ref{alg:coveragecheck}.
+Finally, we performed a \textit{Coverage Test} as proposed by Li et al \cite{cmar}. The purpose of the \textsf{Coverage Test} is to reduce the set of CARs to the ones that most accurately describe our data while avoiding excessive duplication. First, we sorted all of our generated CARs by confidence, support and $\chi^2$ score from best to worst. Starting with the first rule, all documents with features in the antecedent of the rule were marked. Then, we advanced onto the second rule and marked all documents with features in the antecedent of that rule. The process was repeated until each input record was covered. After a single document has been marked five times, we removed it from future consideration. If a rule did not \textit{cover} any considered documents, we discarded the rule. Once all documents have been marked five times, we discarded all remaining rules. For more information, see Algorithm \ref{alg:coveragecheck}.
  
 \begin{algorithm}[h]
 \SetKwData{Covers}{covers}

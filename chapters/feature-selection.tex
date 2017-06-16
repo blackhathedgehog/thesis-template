@@ -5,8 +5,7 @@ feature selection procedure that subjected each feature in our dataset to a batt
 every single  test were eliminated from consideration}.  
 The battery of tests is described in the following sections, followed by a brief analysis of the surviving features.
 
-\section{Association Rule test} This decision procedure can be 
-boiled down to a simple statement: \textit{keep a feature if it
+\section{Association Rule test} This decision procedure is a simple existence check: \textit{keep a feature if it
 appears in the antecedent of at least one of the 628 Class Association Rules
 in our dataset.}
 
@@ -22,23 +21,22 @@ with another categorical feature purely by coincidence.
 
 Suppose a feature is completely uncorrelated with a valence. This means
 that the distribution of its categories will be very similar to that of 
-the distribution of the ground truth labels. Now, suppose a \textbf{YES} value for a particular categorical feature always corresponds to a \textbf{MILD} valence. If we have sufficient number of \textbf{YES} observations, we can compute the likelihood that this happened purely by chance. We
- set our confidence estimate at $95\%$ and rejected any 
+the distribution of the ground truth labels. Now, suppose a \textbf{YES} value for a particular categorical feature always corresponds to a \textbf{MILD} valence. If we have sufficient number of \textbf{YES} observations, we can compute the likelihood that this happened purely by chance -- which would quickly become very low. We
+ rejected any 
 categorical feature whose $\chi^2$ test yielded a p-value higher than $0.05$.
 The $\chi^2$ test was implemented by using \textsf{scipy}'s
 \textsf{chisquare} function to compute the p-value of each categorical feature \cite{scipy}.
 
 
 \subsection{ANOVA F-test for continuous features} 
-ANOVA F-tests are used to test the significance of a regression model\cite{anova}.
+ANOVA F-tests are used to test the significance of a regression model \cite{anova}.
 While we used the $\chi^2$ test to test for potential significance of our 
-categorical features, we used the multi-way ANOVA F-test for our numeric features.
+categorical features, we used the multi-way ANOVA F-test for all numeric features.
 For each feature tested, we separated the data into four subsets, based on the 
 value of the target {Valence} attribute. We then randomly sampled from these four groups. We then tested the means and standard
 deviations in each of the four subsets to see if they represented similar or
-different distributions, and compared them across our multi-way samples to see if there is a statiscal bias. Similarly to the $\chi^2$ test, we set the 
-confidence level at 95\% and rejected any numeric attribute whose ANOVA F-test
-produced a p-value of more than $0.05$.  We uses 
+different distributions, and compared them across our multi-way samples to see if there is a statistical bias. Similarly to the $\chi^2$ test, we set rejected any numeric attribute whose ANOVA F-test
+produced a p-value of more than $0.05$. We used
 scikit-learn's \textsf{f\_classif} function to 
 compute the multi-way ANOVA tests \cite{scikit-learn}. 
 
@@ -49,7 +47,7 @@ In unsupervised problems, MIG  is measured by calculating \textbf{P(X, Y)} - the
 between the two variables, then the probability of \textbf{P(X, Y)} will be higher %% or lower
 than \textbf{P(X) * P(Y)}. Recent research shows that MIG provides an additional level of feature selection in the context of textual classification and clustering \cite{Xu07}. In the case of supervised feature selection, we compare the entropies and distributions of \textsf{Valence} vs. each feature
 using $K$ Nearest Neighbors. At the time of the N-GRID Challenge, \textsf{scikit-learn} \cite{scikit-learn}
-did not have a completed implmentation of
+did not have a completed implementation of
 \textsf{mutual\_info\_classif}, but it was in the process of being developed. We ported \textsf{scikit-learn}'s partial implementation into our system.
 
 \section{Linear SVM Recursive Feature Elimination}
@@ -82,7 +80,7 @@ features kept.
 An unexpected outcome of 
 this process was an essential depletion of directly word related
 features from the dataset. Only 34 out of 300 Word2Vec dimensions were kept. For non-Word2Vec features, only a single unigram survived -- ``\textit{other}''. 
-This implies that the categorical and yes/no responses have far more predictive power for Valence than long form text.
+This implies that the categorical and yes/no responses have far more predictive power  than long form text.
 
 \begin{table}
     \centering

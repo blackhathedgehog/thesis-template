@@ -1,7 +1,7 @@
 \chapter{Ensemble Learning}\label{sec:ensembles}
-From our prior research \cite{kang2016ensemble,an2016map}, we know that ensembles frequently beat vanilla classifiers.
+From our prior research \cite{an2016map,kang2016ensemble}, we know that ensembles frequently beat vanilla classifiers.
 As a consequence, we decided to try out ensembles on our data.
-From our set of 154 classifier data view runs, we  selected the 20 best runs (six of which
+From our set of 154 classifier data view runs, we  selected the 12 best runs (six of which
 were presented in detail in Section \ref{sec:ml}). We constructed
 a variety of ensembles of size 2 to 9 classifiers in each 
 from these runs, and via attrition zeroed in on
@@ -11,12 +11,12 @@ was straightforward:
 \begin{quote}
 \textit{the \textsf{MA-MAE} of the ensemble must
 be higher than $0.851$, the \textsf{MA-MAE} of our best standalone method}
-(\textsf{SVM-Init-Ada-CARS}).
+(\textsf{SVM-Init-Ada-CARs}).
 \end{quote} 
 
 
 Our classifier ensembles were constructed in a straightforward way. Each ensemble
-consisted of a subset of classifiers from our list of 20
+consisted of a subset of classifiers from our list of 12
 best runs. Each classifier in the ensemble
 received an equal vote share (i.e., we did not attempt to weigh
 classifiers differently). We devised six different voting schemes to determine
@@ -154,14 +154,11 @@ We chose \textsf{Ensemble C} over \textsf{Ensemble E} despite its marginally low
 in a secondary run on the 108 \textsf{annotated\_by\_1} records
 \textsf{Ensemble E} had a drop in accuracy that worried us.
 Additionally, \textsf{Ensemble C} was far better than the other
-ensembles in properly recognizing the \textsf{Valence = SEVERE} class. Thus, if the withheld test set actually had a large amount of \textsf{SEVERE} Valence scores, we would expect this classifier to perform much better than the other four. 
-
-
-
+ensembles in properly recognizing the \textsf{Valence = SEVERE} class. Thus, if the withheld test set actually had a large amount of \textsf{SEVERE} Valence scores, we would expect this classifier to perform much better than the other four. In a real-world environment, identifying these \textsf{SEVERE} Valence cases would be extremely important.
 
 % Ensemble A: 6 Classifiers. Tuned Voting Strategy with Thresholds at \textsf{0.7}, \textfs{1.6}, and \textfs{2.25}. 'RF-full', 'RF-reg-clf-full', 'RF-Reg-full', 'Lin-SVM-chi2-best', 'Lin-SVM-anova-best', 'DNN-full'.
 
-% Ensemble B: 2 Classifiers. Tuned Voting Strategy with Thresholds at \textsf{0.7}, \textfs{1.7}, and \textsf{2.3}. 'RF-Reg-full', 'SVM-Init-Ada-CARS'
+% Ensemble B: 2 Classifiers. Tuned Voting Strategy with Thresholds at \textsf{0.7}, \textfs{1.7}, and \textsf{2.3}. 'RF-Reg-full', 'SVM-Init-Ada-CARs'
 
 % Ensemble C: 6 Classifiers. Tuned Voting Strategy with Thresholds at \textfs{0.75}, \textsf{1.5}, and \textsf{2.25}. 'RF-Reg-full', 'Lin-SVM-chi2-best', 'RBF-SVR-mig-best', 'D&W-num', 'SVM-Init-rules', 'MNB-CARs'
 
@@ -183,13 +180,13 @@ ensembles in properly recognizing the \textsf{Valence = SEVERE} class. Thus, if 
         & \textsf{DNN-full}& & \\
     \hline
     \textsf{B}    & \textsf{RF-reg-full} & Tuned round& $0.882$ \\
-        & \textsf{SVM-Init-Ada-CARS} &   (0.7,1.7,2.3)& \\
+        & \textsf{SVM-Init-Ada-CARs} &   (0.7,1.7,2.3)& \\
     \hline
         & \textsf{RF-Reg-full} &  & \\
         & \textsf{Lin-SVM-chi2-best} & & \\
     \textsf{C}    & \textsf{RBF-SVR-mig-best} & Tuned round & $0.865$  \\
         & \textsf{D\&W-num} &   (0.75,1.5,2.25)& \\
-        & \textsf{SVM-Init-Ada-CARS} & & \\
+        & \textsf{SVM-Init-Ada-CARs} & & \\
         & \textsf{MNB-CARs} & & \\
     \hline
          &  \textsf{RF-reg-full} & & \\
@@ -198,7 +195,7 @@ ensembles in properly recognizing the \textsf{Valence = SEVERE} class. Thus, if 
          &  \textsf{DNN-full}  & & \\
     \hline
         & \textsf{RF-Reg-full} &  & \\
-    \textsf{E}    & \textsf{SVM-Init-Ada-CARS} & Tuned round & $0.866$ \\
+    \textsf{E}    & \textsf{SVM-Init-Ada-CARs} & Tuned round & $0.866$ \\
         & \textsf{DNN-full} &  (0.7,1.4,2.4) & \\
         & \textsf{Lin-SVM-chi2-best} & & \\
     \hline
@@ -238,8 +235,22 @@ ensembles in properly recognizing the \textsf{Valence = SEVERE} class. Thus, if 
     \textsf{ MODERATE } & 2 & 21 & \cellcolor{gray!15} 42 & 17 \\ 
     \textsf{ SEVERE } & 0 & 3 & 10 & \cellcolor{gray!15} 55 \\ 
     \hline
+    \textsf{ \cellcolor{gray!15} ENSEMBLE D } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MOD. } & \textsf{ Pred SEVERE } \\ 
+    \hline
+    \textsf{ NONE } & \cellcolor{gray!15} 28 & 13 & 4 & 0 \\ 
+    \textsf{ MILD } & 7 & \cellcolor{gray!15} 99 & 24 & 0 \\ 
+    \textsf{ MODERATE } & 2 & 14 & \cellcolor{gray!15} 47 & 19 \\ 
+    \textsf{ SEVERE } & 0 & 2 & 17 & \cellcolor{gray!15} 49 \\ 
+    \hline
+    \textsf{ \cellcolor{gray!15} ENSEMBLE E } & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MOD. } & \textsf{ Pred SEVERE } \\ 
+    \hline
+    \textsf{ NONE } & \cellcolor{gray!15} 30 & 12 & 33 & 0 \\ 
+    \textsf{ MILD } & 8 & \cellcolor{gray!15} 101 & 21 & 0 \\ 
+    \textsf{ MODERATE } & 0 & 12 & \cellcolor{gray!15} 60 & 10 \\ 
+    \textsf{ SEVERE } & 0 & 2 & 16 & \cellcolor{gray!15} 50 \\ 
+    \hline
     \end{tabular}    
-    \caption{Confusion Matrices on the 325 document training set for the 3 submitted Ensembles}
+    \caption{Confusion Matrices on the 325 document training set for the 5 analyzed Ensembles (first 3 submitted)}
     \label{tab:EnsembleTrainConfusionMatrix}
 \end{table}
 
@@ -317,6 +328,25 @@ precision, recall, f-measure and accuracy of the ensembles.
 % did much better than Majority and Plurality schemes (a lift of 0.04 - 0.05). 
 % This gap got much smaller once we added association rules towards the end
 % of the competition.
+
+\subsection{Hybrid Random Forest Contribution} As discussed in Section \ref{sec:newml}, our Random Forest Regression with Classification Inference provided a modest amount of lift to our hybrid rounding scheme. We analyze this lift here by substituting \textsf{RF-reg-clf-full} with \textsf{RF-reg-full} in Ensemble A. Table ~\ref{tab:substituteRF} compares the confusion matrix that this substitution makes. The substitution actually slightly increases \textsf{MILD} by removing two errors. However, for \textsf{NONE} and \textsf{MODERATE} the error increase is 9 points each! This comes out to be a MA-MAE difference of 0.0318 and worse than just using \textsf{SVM-Init-Ada-CARs} alone. It is quite possible that these errors could have been mitigated by re-running our Tuned Voting process to find more precise breakpoints, so this should be used as an estimation of maximum loss rather than actual loss. The actual loss is guaranteed to be at least 0.015 as Ensemble D was our fourth-best ensemble with a MA-MAE of 0.850.
+
+\begin{table}[H]
+\centering
+    \begin{tabular}{|l|c|c|c|c|}
+   \hline
+   \textsf{ \cellcolor{gray!15}} & \textsf{ Pred NONE } & \textsf{ Pred MILD } & \textsf{ Pred MOD. } & \textsf{ Pred SEVERE } \\ 
+    \hline
+    \textsf{ NONE } & -9 & +9 & 0 & 0 \\ 
+    \textsf{ MILD } & 0 & +2 & -2 & 0 \\ 
+    \textsf{ MODERATE } & -1 & +4 & -10 & +7 \\ 
+    \textsf{ SEVERE } & 0 & +1 & -1 & 0 \\ 
+   \hline
+   \end{tabular}
+   \caption{Effect on Confusion Matrices for substituting RF-reg-clf-full with RF-reg-full in Ensemble A}
+   \label{tab:substituteRF}
+\end{table}
+
 
 \section{Test Results}
 
@@ -423,7 +453,7 @@ It is worth immediately noting, by comparing confusion
 matrices in  Table \ref{tab:EnsembleTestConfusionMatrix}
 to those in Table \ref{tab:EnsembleTrainConfusionMatrix}
 (for the training set), that all three ensembles overall
-performed as expected and did not overfit the training
+performed as hoped and did not overfit the training
 set by much. Much of the ensemble's MA-MAE improvement was by avoiding misclassifying documents
 with an error of $2$ or more; 10, 11, and 7 data points (respectively) with classification
 error of $2$ or more. This compares with 7, 5, and 8 such

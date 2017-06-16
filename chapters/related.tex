@@ -1,6 +1,6 @@
 \chapter{Related Work}\label{sec:related}
 
-Machine Learning is the name of the set of tasks given to computers with the goal of being able to identify future observations correctly, given a set of observations in the past. There are several different types of classification problems, but the two that we will be focusing on are supervised and unsupervised classification. 
+Machine Learning another name for the task known as \textit{predictive modeling}: given a set of observations in the past, can you construct a procedure that can identify future observations correctly? There are several different types of classification problems, but the two that we will be focusing on are supervised and unsupervised classification. 
 
 \section{Classification}
 
@@ -11,7 +11,7 @@ An excellent classifier would be able to identify hot days from cold ones with h
 %% 
 \subsection{Supervised Classification}
 
-Supervised Classification is focused on identifying membership to one of a set of \textit{predetermined} patterns, typically called a \textit{label} \cite{liu2007web}. Supervised learning is called supervised because it is assigned a label by a human that is decided upon before the algorithm is trained. The \textit{training} step will be given each label, and the label must be trustworthy and consistent. Supervised Classification problems, therefore, tend to be somewhat expensive to collect data for. Every data point must be labeled and audited by a human, or perhaps several in order to form a clear consensus.
+Supervised Classification is focused on identifying membership to one of a set of \textit{predetermined} patterns, typically called a \textit{label} \cite{liu2007web}. Supervised learning is called supervised because it is assigned a label by a human that is decided upon before the algorithm is trained. The \textit{training} step will be given each label, and the label must be trustworthy and consistent. Supervised Classification problems, therefore, tend to be somewhat expensive to collect data for. Every data point must be labeled and audited by a human, or even several in order to form a clear consensus.
 
 In the following paragraphs, a brief description will be provided of a variety of the most common supervised machine learning techniques that we used as a part of \CREATE. 
 
@@ -23,7 +23,7 @@ Naive Bayes is one of the simplest machine learning algorithms \cite{liu2007web}
 
 Decision Trees are classifiers modeled after a flowchart. The final result of the classifier is a simple of yes/no questions, terminating with a final label at each of its terminal nodes -- called \textit{leaves}. Since computing the best possible decision tree is difficult (NP-complete), usually a set of heuristics are employed \cite{liu2007web}.
 
-To construct the classifier, a recursive algorithm is employed. The base case is when the input computes only a single class, or if every single attribute has already been analyzed. In that case, the result is a leaf node of the majority class. Otherwise, each remaining attribute \footnote{for very large numbers of attributes, someones only a random sample is analyzed at each level} is analyzed to see which attribute splits the dataset into two ``pure'' disjoint sets best. The attribute is removed and phrased as a ``question'' in the final classifier, while each of the disjoint sets are re-evaluated.
+To construct the classifier, a recursive algorithm is employed. The base case is when the input computes only a single class, or if every single attribute has already been analyzed. In that case, the result is a leaf node of the majority class. Otherwise, each remaining attribute \footnote{for very large numbers of attributes, someones only a random sample is analyzed at each level} is analyzed to see which attribute splits the dataset into two ``pure'' disjoint sets best. The selected attribute is removed and phrased as a ``question'' in the final classifier, while each of the disjoint sets are re-evaluated recursively until each sub-problem is terminated with only leaf nodes.
 
 \begin{algorithm}[ht]
 \SetKwData{DecisionTree}{DecisionTree}
@@ -70,9 +70,9 @@ To construct the classifier, a recursive algorithm is employed. The base case is
 
 \paragraph{AdaBoost} \label{sec:adaboost}
 
-AdaBoost is a methodology in which an \textit{ensemble} of weak learners are trained in succession, where each learner specializes in correcting the errors the previous learner made. AdaBoost traditionally uses fast and weak learners such as Naive Boost or Decision Trees, as the initial weak learners only have to perform slightly better than random in order to eventually converge to a stronger classifier \cite{liu2007web}.
+AdaBoost is a methodology in which an \textit{ensemble} of weak learners are trained in succession; each learner specializing in correcting the errors the previous learner made. AdaBoost traditionally uses fast and weak learners such as Naive Boost or Decision Trees, as the initial weak learners only have to perform slightly better than random in order to eventually converge to a stronger classifier \cite{liu2007web}.
 
-First, a base classifier is trained as normal. Then, there is a \textit{boosting} step: this step computes all the training instances that were correctly or incorrectly identified. Those which were correctly identified are assigned a weaker level of importance for the successive classifier, while incorrectly classified observations are given a higher level of importance. Finally, the next classifier is trained \cite{adaboost}. 
+First, a base classifier is trained. Then, there is a \textit{boosting} step: this step computes all the training instances that were correctly or incorrectly identified. Those which were correctly identified are assigned a weaker level of importance for the successive classifier, while incorrectly classified observations are given a higher level of importance. Finally, the next classifier is trained with the re-weighted dataset \cite{adaboost}. 
 
 The last two steps are repeated a predetermined number of times, or until a learner cannot improve on a previous learner. 
 
@@ -116,7 +116,7 @@ Unsupervised Classification does not have labels, and instead attempts to assign
 
 \section{Text Representation and Word Vectors} \label{sec:wordvectors}
 
-WordVectors \cite{word2vec} are currently the method of representing text as features for supervised and unsupervised classification problems. However, the exact benefits of WordVectors are unclear without going over a brief history of simpler means of representation and textual feature extraction.
+WordVectors \cite{word2vec} are currently the state-of-the-art method of representing text as features for supervised and unsupervised classification problems. However, the exact benefits of WordVectors are unclear without going over a brief history of simpler means of representation and textual feature extraction.
 
 \subsection{Bag of Words}
 
@@ -126,7 +126,7 @@ The traditional method of text representation was a \textit{Bag of Words}. Bag o
 
 %% Add citation for Singular Value Decomposition
 \par{
-Some classifiers, such as naive Bayes \cite{rish2001empirical}, work with these very wide and sparse matrices very well. For classifiers that prefer small, dense matrices there are several strategies such as latent Dirichlet Allocation \cite{blei2003latent} and Singular Value Decomposition \cite{} that attempt to extract the most frequent and meaningful co-occurring terms and represent them as a single value. Moreover, additional information can be injected by extracting \textit{Parts of Speech} -- such as \textit{Noun} or \textit{Adjective} -- or constructing the \textit{lemma} of terms -- swimming $\rightarrow$ swim. 
+Some classifiers, such as Naive Bayes \cite{rish2001empirical}, work with these very wide and sparse matrices very well. For classifiers that prefer small, dense matrices there are several strategies such as latent Dirichlet Allocation \cite{blei2003latent} and Singular Value Decomposition \cite{liu2007webi} that attempt to extract the most frequent and meaningful co-occurring terms and represent them as a single value. Moreover, additional information can be injected by extracting \textit{Parts of Speech} -- such as \textit{Noun} or \textit{Adjective} -- or constructing the \textit{lemma} of terms -- swimming $\rightarrow$ swim. 
 }
 
 \subsection{AutoEncoders}
@@ -136,10 +136,10 @@ AutoEncoders were originally designed as compression strategies for video and te
 }
 %% Should it be "0...1" or are two periods standard?
 \par{
-Consider an grayscale image matrix $I$, that is \textsf{1000x1000} pixels. To simplify the problem, instead of a traditional RGB channel, each pixel is a float value in the range of 0\ldots1 indicating the grayscale of that pixel \footnote{which can be trivially converted to the RGB colorspace at render time}. Thus, the image contains 1 million floats if we were to represent it as a naive, dense matrix. Suppose our goal is to achieve 50\% compression. We would want to create two functions: $f_c$ and $f_d$. $f_c$ accepts $I$ and outputs a compressed version $C$ which is sent to the client, which $f_d$, then decodes and outputs $I'$. Our algorithm is trained to minimize the \textit{loss} which might be defined as the difference between $I$ and $I'$. Our black-box AutoEncoder would thus look something like this:
+Consider an grayscale image matrix $I$, that is \textsf{1000x1000} pixels. To simplify the problem, instead of a traditional RGB channel, each pixel is a float value in the range of 0\ldots1 indicating the grayscale of that pixel. Thus, the image contains 1 million floats if we were to represent it as a naive, dense matrix. Suppose our goal is to achieve 50\% compression. We would want to create two functions: $f_c$ and $f_d$. $f_c$ accepts $I$ and outputs a compressed version $C$ which is sent to the client, which $f_d$, then decodes and outputs $I'$. Our algorithm is trained to minimize the \textit{loss} which might be defined as the difference between $I$ and $I'$. Our black-box AutoEncoder would thus look something like this:
 }
 
-\begin{figure}
+\begin{figure}[h]
 \[f_c(I) => C \]
 \[ f_d(C) => I' \]
 \caption{S.t. $(I' - I)^2$ is minimized}
@@ -147,18 +147,18 @@ Consider an grayscale image matrix $I$, that is \textsf{1000x1000} pixels. To si
 
 %% Caption for AutoEncoder
 \par{
-Intuitively, there is a trade-off in $|C|$ and the loss. That is, smaller, more-compressed matrices will generally result in a higher loss $I'$. In a typical system, AutoEncoders are \textit{stacked}. That is, we might have three successive compression functions, each emitting a compressed matrix, followed by three successive decompression functions. The exact implementations of the AutoEncoder is beyond the scope of this paper, but they generally rely on a Deep Neural Network \cite{tensorflow}.
+Intuitively, there is a trade-off in $|C|$ and the loss. That is, smaller, more-compressed matrices will generally result in a higher loss $I'$. In a typical system, AutoEncoders are \textit{stacked}. That is, we might have three successive compression functions, each emitting a compressed matrix, followed by three successive decompression functions. The exact implementations of the AutoEncoder is beyond the scope of this discussion, but they generally rely on a Deep Neural Network \cite{tensorflow}.
 }
 
 \subsection{Word2Vec}
 
 \par{
-Mikolov's Word Vector model is one of the greatest recent developments in text classification \cite{word2vec}. Mikolov identified a few weaknesses of the Bag of Words model. First, constructing Bag of Word features requires two passes over the data, which can be very costly when working with billions of documents. Second, if one could construct a model that captures all English literature with reasonable precision, then that model can be trained once and then used on nearly every English NLP problem. However, a "Universal English" Bag of Words model would be enormous and contain many unused words for most practical applications. The final and most significant flaw is how Bag of Words treats every word as equally distant from each other. This is intuitively imprecise. Words pairs such as \textit{lake} and \textit{swim} or \textit{queen} and \textit{king} are intuitively related compared to \textit{evil} and \textit{throttle}.
+Mikolov's Word Vector model is one of the greatest recent developments in text classification \cite{word2vec}. Mikolov identified a few weaknesses of the Bag of Words model. First, constructing Bag of Word features requires two passes over the data \footnote{at least, not without using the Hashing Trick, which has its own drawbacks as discussed earlier}, which can be very costly when working with billions of documents. Second, if one could construct a model that captures all English literature with reasonable precision, then that model can be trained once and then used on nearly every English NLP problem. However, a "Universal English" Bag of Words model would be enormous and contain many unused words for most practical applications. The final and most significant flaw is how Bag of Words treats every word as equally distant from each other. This is intuitively imprecise. Words pairs such as \textit{\{\textit{lake}, \textit{swim}\}} or \textit{\{\textit{queen}, \textit{king}\}} are intuitively related compared to \textit{\{\textit{evil}, \textit{throttle}\}}.
 }
 
 %% Why aren't these paragraphs indented?
 \par{
-Word vector solves this by constructing dense, continuous vectors with a limited number of dimensions such that similar words are closer than unrelated words. If vector space representations of \textit{queen} and \textit{king} were close, then we would have at least a partial success at solving the third problem. If our training model is capable of an online training that can handle billions of documents in a reasonable amuont of time, this would go a long way towards addressing the first two flaws.
+Word vectors solves this by constructing dense, continuous vectors with a limited number of dimensions such that similar words are closer than unrelated words. If vector space representations of \textit{queen} and \textit{king} were close, then we would have at least a partial success at solving the third problem. If our training model is capable of an online training that can handle billions of documents in a reasonable amuont of time, this would go a long way towards addressing the first two flaws.
 }
 
 \par{
@@ -197,8 +197,7 @@ By itself, the \textit{skip-gram} and \textit{cbow} models do not seem to be use
 \section{Existing Medical Language Methodologies}
 
 We limit discussion of existing methologodies to two categories:
-work on analysis of clinical records in the medical domain, primarily concentrating
-here on NLP approaches; and emerging machine learning and NLP technologies.
+work on analysis of clinical records in the medical domain, and emerging machine learning and NLP technologies.
 In addition to these, our work on this project used a wide array of 
 classification \cite{wu08} and association rule mining \cite{fpgrowth} techniques, and
 traditional methods for text parsing and Parts-of-Speech (POS) tagging \cite{stanfordparser}. 
@@ -208,12 +207,15 @@ the Snowball stemmer for English\cite{snowball}.
 
 %% SKYLAR: EXPAND?
 \paragraph{SentEmotion} 
-Through its work on past projects \cite{dickerson14,kagan15,darpa} SentiMetrix has built an array of technology-based solutions, focusing on the near real-time analysis of large quantities of complex data in multiple languages. SentEmotion \cite{coptads,coptads-book} is a text-based classification engine developed jointly with psychologists that detects mental health disorders such as \textit{Depression}, \textit{Post-Traumatic Stress Disorder}, and \textit{Traumatic Brain Injury} from patient notes. Leading surveys had identified a set of signals that a victim of depression might have: for example, isolation from others. We built a classification engine on top of the Stanford Parser \cite{stanfordparser} to extract these signals, and then a second layer to extract both emotions -- anger or fear -- and symptoms -- insomnia or agoraphobia. The final layer generates a confidence value for each of the disorders that COPTADs is configured to recognize. Clinical Text Analysis and Knowledge Extraction System \cite{ctakes} by Apache is an open-source NLP system that extracts a variety of mental illness signals, physical symptoms, and medication from text.
+Through its work on past projects \cite{dickerson14,kagan15,darpa} SentiMetrix has built an array of technology-based solutions, focusing on the near real-time analysis of large quantities of complex data in multiple languages. SentEmotion \cite{coptads-book,coptads} is a text-based classification engine developed jointly with psychologists that detects mental health disorders such as \textit{Depression}, \textit{Post-Traumatic Stress Disorder}, and \textit{Traumatic Brain Injury} from patient notes. Leading surveys had identified a set of signals that a victim of depression might have: for example, isolation from others. We built a classification engine on top of the Stanford Parser \cite{stanfordparser} to extract these signals, and then a second layer to extract both emotions -- anger or fear -- and symptoms -- insomnia or agoraphobia. The final layer generates a confidence value for each of the disorders that COPTADs is configured to recognize. 
+
+
+\paragraph{cTAKES} Clinical Text Analysis and Knowledge Extraction System \cite{ctakes} by Apache is an open-source NLP system that extracts a variety of mental illness signals, physical symptoms, and medication from text.
 
 %% TODO: cite apriori?
-\paragraph{Classification using Association Rules} B. Liu developed a technique on which to do Classification Based On Association Rules \cite{cba}. Liu's main contributions is the notion of a \textit{coverage check} in which rules are sorted in order of their predictive power -- confidence -- and then rules that are subsumed by a more powerful rule are removed. At inference time, the first rule in which the antecedent is covered yields its corresponding class. Li et all improves upon this work by raising the minimum coverage of the \textit{coverage check} to 5 subsuming rules, as well as a stronger rule scoring using chi-$x^2$ tests \cite{cmar}. In addition, Li suggests storing rules in a trie so that inference can be performed quickly. 
+\paragraph{Classification using Association Rules} B. Liu developed a technique on which to do Classification Based On Association Rules \cite{cba}. Liu's main contributions is the notion of a \textit{coverage check} in which rules are sorted in order of their predictive power -- \textit{confidence} -- and then removes rules that are subsumed by a more powerful rule. At inference time, the first rule in which the antecedent is covered yields its corresponding class. Li et all improves upon this work by raising the minimum coverage of the \textit{coverage check} to 5 subsuming rules, as well as a stronger rule scoring using chi-$x^2$ tests \cite{cmar}. In addition, Li suggests storing rules in a trie so that inference can be performed quickly. 
 
-\paragraph{Feature Selection using Association Rules} K. Rajeswari continued Liu's work to see if \textsf{Apriori} rule mining can be used select features with high significance \cite{rajeswari}. First, the authors mined a set of rules with a small $k$ value. Then, they removed all features that did not appear in at least one rule. Next, they re-ran the \textsf{Apriori} but on a much larger $k$. Finally, when training the final classifier, they included only the features that were an antecedent in at least one rule. The higher $k$ value omits some useful association rules, but should take an order of magnitude less time to complete, due to the large reduction of $n$ candidate rules. The author noticed on a dataset attempting to classify the risk of heart disease that computation time was cut by a full two orders of magnitude with this procedure.
+\paragraph{Feature Selection using Association Rules} K. Rajeswari continued Liu's work to see if \textsf{Apriori} rule mining can be used select features with high significance, specifically in order to classify the risk of heart disease \cite{rajeswari}. First, the authors mined a set of rules with a small $k$ value. Then, they removed all features that did not appear in at least one rule. Next, they re-ran the \textsf{Apriori} but on a much larger $k$. Finally, when training the final classifier, they included only the features that were an antecedent in at least one rule. The higher $k$ value omits some useful association rules, but should take an order of magnitude less time to complete, due to the large reduction of $n$ candidate rules. The author conclude that this process reduces computation time on their dataset by two full orders of magnitude.
 
 %%% TODO: expand this some more
 \paragraph{Other Work} Abbe \cite{abbe} describes different styles of psychiatric NLP and suggests four domains: observational studies, analysis of patient's thoughts and journals, medical records, and published literature. The NGRID challenge falls into the third category, whereas SentEmotion mostly focused on the second. Pestian \cite{pestian} created an NLP pipeline that could identify whether or not a suicide note was genuine using decision-tree-based classification rules along with AdaBoost and outperformed domain experts by reducing Type II errors by 30\%.

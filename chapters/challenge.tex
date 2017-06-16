@@ -61,12 +61,12 @@ mental health, and family history captured in the provided data.
 \end{table}
 
 The  XML files provided by the challenge organizers contained both structured data, which documented
-demographic information, mental health history, education, employment, financial status, family history of mental health, medical history, prescription and recreational drug use, and a few other categories of information; along with unstructured, free-form textual data, which documented self-reported symptoms and attending psychiatrists' notes on the patient and their condition. The data was in its raw, originally recorded form, and contained numerous typos, missing attributes, inconsistent use of abbreviations, and freeform text. The data was also anonymized.
+demographic information, mental health history, education, employment, financial status, family history of mental health, medical history, prescription and recreational drug use, and a few other categories of information; along with unstructured, free-form textual data, which documented self-reported symptoms and attending psychiatrists' notes on the patient and their condition. The data was in its raw, originally recorded form; containing numerous typos, conjoined words, missing attributes, inconsistent use of abbreviations, and freeform text. 
 
 Figure \ref{fig:sampleRecord} shows a \textit{notional (not real) record} created by us to illustrate the nature
 of the data --- it contains no
 information from the N-GRID dataset. However, this notional record
-can give the reader an idea of the type of information that the teams had access to while working on the challenge
+can give the reader an idea of the type of information that the teams had access to while working on the challenge.
 Actual records contained significantly more data.
 
 \begin{figure}[t]
@@ -163,7 +163,7 @@ Table \ref{tab:data2} contains a rough breakdown of the types of features found 
 \end{table}
 
 
-The results of the challenge were evaluated using the a variant of the \textsf{Mean Absolute Error (MAE)} metric.  Given a vector $\mathbf{v} = (v_1,\ldots,v_n)$ of ground truth values and a prediction vector $\mathbf{p} = (p_1,\ldots, p_n)$, the \textsf{MAE} of the prediction is computed as  $$ MAE(\mathbf{p},\mathbf{v}) = \frac{1}{n}\sum_{i=1}^{n}| p_i - v_i|$$
+The results of the challenge were evaluated using the a variant of the \textsf{Mean Absolute Error (MAE)} metric.  Given a vector $\mathbf{v} = (v_1,\ldots,v_n)$ of ground truth values and a prediction vector $\mathbf{p} = (p_1,\ldots, p_n)$, the \textsf{MAE} of the prediction is computed as: $$ MAE(\mathbf{p},\mathbf{v}) = \frac{1}{n}\sum_{i=1}^{n}| p_i - v_i|$$
 
 \textsf{MAE} as described is frequently used in a variety of machine learning tests \cite{willmott2005advantages}. However, it has an unbounded maximal value, which can make it unintuitive to reason about. For this reason, the challenge organizes changed the formula such that the score was in the range of [0, 1], where 1 indicated a perfect score. The new \textsf{MA-MAE} (\textsf{Macro-Averaged Mean Absolute Error}) measure was computed
 by splitting the set of records into four categories (one per ground truth \textsf{Valence} value), computing the \textsf{MAE} for each of the four subsets independently, and combining the computed \textsf{MAE}s into a weighted sum. The normalizing factors

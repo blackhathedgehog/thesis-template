@@ -11,14 +11,14 @@ We provide brief overviews of the individual components of \CREATE\  below.
 extraction of existing features from the raw XML data provided to us by the  organizers.
 After starting with the features present verbatim (i.e., as unique elements) in the released dataset (see Table \ref{tab:data2}) we defined several other features to generate a single overarching dataset.
 
- \item \textsf{Development of Association Rule-based Features} - described in Section~\ref{sec:assoc-rules}. In this stage, we extracted a set of 345,373 Class Association Rules from the above dataset and then eliminated redundant ones to generate a total of 628 in all. For each retained Class Association Rule we included a binary feature into our dataset.
+ \item \textsf{Development of Association Rule-based Features} - described in Section~\ref{sec:assoc-rules}. In this stage, we extracted a set of 345,373 Class Association Rules from the above dataset and then eliminated redundant ones to generate a final count of 628. For each retained Class Association Rule we included a binary feature into our augmented dataset.
  
- \item \textsf{Feature Selection} - described in Section \ref{sec:selection}. We next devised a set of tests to identify irrelevant features; a feature that failed all of the tests was eliminated.
+ \item \textsf{Feature Selection} - described in Section \ref{sec:selection}. We devised a set of tests to identify irrelevant features; a feature that failed all of the tests was eliminated.
  
  \item \textsf{Classifier Development \&\ Training} - described in Section \ref{sec:ml}. 
 We devised seven different views of our data: each view containing a specific subset of the
 full set of features. We put together a battery of 22 machine learning algorithms,
-including two novel adaptations of Random Forests and AdaBoost that we developed.
+including two novel adaptations of Random Forests and AdaBoost. 
 We trained the 22 classifiers on our seven data views and selected the best runs
 for the ensemble learning step.
 
@@ -29,7 +29,7 @@ techniques to see which, if any, provided the best solutions.
 At the end, a number of \textit{simple} ensembles over subsets of our classifiers emerged with scores
 that were clear improvements over the best  individual classifiers, and produced \textsf{MA-MAE} scores over 0.86.  From those, we selected three predictors that we submitted
 to the N-GRID  challenge organizers.  
-We were glad and proud to discover that one of our submissions had the
+We are proud to report that one of our submissions had the
 highest overall \textsf{MA-MAE} among the submitted solutions.
 \end{enumerate}
 
